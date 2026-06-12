@@ -1,0 +1,467 @@
+@import "tailwindcss";
+
+/* ────────────────────────────────────────────────────────────────────────────
+   Design tokens — the warm voxel-sunset palette.
+   Tweak colors here to re-skin the whole site.
+   ──────────────────────────────────────────────────────────────────────── */
+@theme {
+  --font-pixel: var(--font-pixelify), ui-sans-serif, system-ui, sans-serif;
+  --font-arcade: var(--font-press-start), ui-monospace, monospace;
+  --font-body: var(--font-nunito), ui-sans-serif, system-ui, sans-serif;
+
+  /* night sky → sunset */
+  --color-night: #171029;
+  --color-dusk: #3b2353;
+  --color-plum: #6d3a6e;
+  --color-ember: #e2603f;
+  --color-sunset: #f08a4b;
+  --color-gold: #f5b942;
+  --color-glow: #ffd98a;
+
+  /* parchment & wood */
+  --color-cream: #f3e7c9;
+  --color-parchment: #e9dcb6;
+  --color-parchment-deep: #d9c693;
+  --color-ink: #2b1c12;
+  --color-wood: #3a2a1c;
+  --color-wood-dark: #241910;
+  --color-wood-deep: #1b110a;
+  --color-wood-light: #57422c;
+  --color-outline: #160d07;
+
+  /* nature */
+  --color-leaf: #8cc152;
+  --color-leaf-dark: #56853a;
+  --color-heart: #e0565e;
+
+  --shadow-pixel: 0 6px 0 0 rgba(10, 5, 2, 0.45);
+}
+
+/* ────────────────────────────────────────────────────────────────────────────
+   Base
+   ──────────────────────────────────────────────────────────────────────── */
+html {
+  scroll-behavior: smooth;
+  /* keep anchored sections clear of the fixed HUD */
+  scroll-padding-top: 64px;
+}
+
+body {
+  background: var(--color-wood-deep);
+  color: var(--color-cream);
+  font-family: var(--font-body);
+  overflow-x: clip;
+  -webkit-tap-highlight-color: transparent;
+}
+
+::selection {
+  background: var(--color-gold);
+  color: var(--color-ink);
+}
+
+/* chunky pixel scrollbar (WebKit) */
+::-webkit-scrollbar {
+  width: 12px;
+}
+::-webkit-scrollbar-track {
+  background: var(--color-wood-deep);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-wood-light);
+  border: 3px solid var(--color-wood-deep);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-gold);
+}
+
+img,
+svg {
+  image-rendering: pixelated;
+}
+
+/* ────────────────────────────────────────────────────────────────────────────
+   Pixel chrome — notched corners, panels, buttons
+   ──────────────────────────────────────────────────────────────────────── */
+
+/* 8-px notched corners: the signature "rounded pixel" silhouette */
+.pix {
+  clip-path: polygon(
+    0 8px,
+    8px 8px,
+    8px 0,
+    calc(100% - 8px) 0,
+    calc(100% - 8px) 8px,
+    100% 8px,
+    100% calc(100% - 8px),
+    calc(100% - 8px) calc(100% - 8px),
+    calc(100% - 8px) 100%,
+    8px 100%,
+    8px calc(100% - 8px),
+    0 calc(100% - 8px)
+  );
+}
+
+/* smaller 4-px notch for fine elements */
+.pix-sm {
+  clip-path: polygon(
+    0 4px,
+    4px 4px,
+    4px 0,
+    calc(100% - 4px) 0,
+    calc(100% - 4px) 4px,
+    100% 4px,
+    100% calc(100% - 4px),
+    calc(100% - 4px) calc(100% - 4px),
+    calc(100% - 4px) 100%,
+    4px 100%,
+    4px calc(100% - 4px),
+    0 calc(100% - 4px)
+  );
+}
+
+/* carved wooden panel interior */
+.panel-wood {
+  background: var(--color-wood);
+  box-shadow:
+    inset 0 4px 0 rgba(255, 226, 170, 0.07),
+    inset 4px 0 0 rgba(255, 226, 170, 0.04),
+    inset 0 -6px 0 rgba(0, 0, 0, 0.33),
+    inset -4px 0 0 rgba(0, 0, 0, 0.18);
+}
+
+.panel-wood-dark {
+  background: var(--color-wood-dark);
+  box-shadow:
+    inset 0 4px 0 rgba(255, 226, 170, 0.05),
+    inset 0 -6px 0 rgba(0, 0, 0, 0.4);
+}
+
+/* aged parchment interior */
+.panel-parchment {
+  background: linear-gradient(
+    180deg,
+    var(--color-cream) 0%,
+    var(--color-parchment) 70%,
+    var(--color-parchment-deep) 100%
+  );
+  box-shadow:
+    inset 0 4px 0 rgba(255, 255, 255, 0.55),
+    inset 0 -6px 0 rgba(124, 94, 47, 0.35);
+}
+
+/* hard offset shadow used behind big text */
+.text-pixel-shadow {
+  text-shadow:
+    0 4px 0 rgba(22, 10, 5, 0.85),
+    0 0 28px rgba(255, 170, 80, 0.3);
+}
+
+.text-pixel-shadow-sm {
+  text-shadow: 0 2px 0 rgba(22, 10, 5, 0.8);
+}
+
+/* dashed pixel rule, e.g. under card titles */
+.pixel-rule {
+  height: 4px;
+  background-image: repeating-linear-gradient(
+    90deg,
+    currentColor 0 8px,
+    transparent 8px 16px
+  );
+  opacity: 0.45;
+}
+
+/* ────────────────────────────────────────────────────────────────────────────
+   Buttons
+   ──────────────────────────────────────────────────────────────────────── */
+.pixel-btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  min-height: 52px;
+  padding: 0.95rem 1.6rem;
+  font-family: var(--font-arcade);
+  font-size: 0.7rem;
+  line-height: 1.5;
+  text-align: center;
+  letter-spacing: 0.03em;
+  color: var(--color-ink);
+  background: var(--color-outline);
+  cursor: pointer;
+  touch-action: manipulation;
+  user-select: none;
+  transition: transform 120ms ease, filter 120ms ease;
+}
+
+.pixel-btn > .pixel-btn-face {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  position: absolute;
+  inset: 4px;
+  padding: 0 1rem;
+  transition: box-shadow 120ms ease;
+}
+
+.pixel-btn > .pixel-btn-label {
+  position: relative;
+  z-index: 1;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.pixel-btn--amber > .pixel-btn-face {
+  background: linear-gradient(180deg, #ffd166 0%, #f5b942 55%, #e89a2e 100%);
+  box-shadow:
+    inset 0 4px 0 rgba(255, 255, 255, 0.45),
+    inset 0 -5px 0 rgba(140, 78, 15, 0.55);
+}
+
+.pixel-btn--green {
+  color: #122108;
+}
+.pixel-btn--green > .pixel-btn-face {
+  background: linear-gradient(180deg, #a8d96c 0%, #8cc152 55%, #6da23e 100%);
+  box-shadow:
+    inset 0 4px 0 rgba(255, 255, 255, 0.4),
+    inset 0 -5px 0 rgba(50, 86, 24, 0.55);
+}
+
+.pixel-btn--ghost {
+  color: var(--color-cream);
+}
+.pixel-btn--ghost > .pixel-btn-face {
+  background: rgba(36, 25, 16, 0.85);
+  box-shadow:
+    inset 0 0 0 2px rgba(243, 231, 201, 0.28),
+    inset 0 4px 0 rgba(255, 255, 255, 0.06),
+    inset 0 -5px 0 rgba(0, 0, 0, 0.35);
+}
+
+.pixel-btn:hover {
+  filter: brightness(1.07);
+}
+
+.pixel-btn:active {
+  transform: translateY(3px);
+}
+.pixel-btn:active > .pixel-btn-face {
+  box-shadow:
+    inset 0 5px 0 rgba(0, 0, 0, 0.25),
+    inset 0 -4px 0 rgba(255, 255, 255, 0.12);
+}
+
+.pixel-btn:focus-visible {
+  outline: none;
+}
+.pixel-btn:focus-visible > .pixel-btn-face {
+  box-shadow:
+    inset 0 0 0 3px #fff8e1,
+    inset 0 0 0 5px rgba(43, 28, 18, 0.8);
+}
+
+/* ────────────────────────────────────────────────────────────────────────────
+   Scroll-reveal
+   ──────────────────────────────────────────────────────────────────────── */
+.reveal {
+  opacity: 0;
+  transform: translateY(18px);
+  transition:
+    opacity 0.65s ease,
+    transform 0.65s ease;
+}
+.reveal-shown {
+  opacity: 1;
+  transform: none;
+}
+
+/* ────────────────────────────────────────────────────────────────────────────
+   Keyframe animations (transform/opacity only — GPU friendly)
+   ──────────────────────────────────────────────────────────────────────── */
+@keyframes bob {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(7px);
+  }
+}
+.anim-bob {
+  animation: bob 1.6s ease-in-out infinite;
+}
+
+@keyframes drift {
+  from {
+    transform: translateX(-180px);
+  }
+  to {
+    transform: translateX(820px);
+  }
+}
+.cloud-drift {
+  animation: drift 90s linear infinite;
+}
+.cloud-drift-slow {
+  animation: drift 130s linear infinite;
+  animation-delay: -45s;
+}
+.cloud-drift-slower {
+  animation: drift 160s linear infinite;
+  animation-delay: -110s;
+}
+
+@keyframes twinkle {
+  0%,
+  100% {
+    opacity: 0.25;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+.anim-twinkle {
+  animation: twinkle 2.6s ease-in-out infinite;
+}
+
+@keyframes glowPulse {
+  0%,
+  100% {
+    opacity: 0.35;
+  }
+  50% {
+    opacity: 0.65;
+  }
+}
+.anim-glow {
+  animation: glowPulse 3.4s ease-in-out infinite;
+}
+
+@keyframes smokeRise {
+  0% {
+    transform: translateY(0);
+    opacity: 0;
+  }
+  15% {
+    opacity: 0.7;
+  }
+  100% {
+    transform: translateY(-46px);
+    opacity: 0;
+  }
+}
+.anim-smoke {
+  transform-box: fill-box;
+  animation: smokeRise 4.5s linear infinite;
+}
+
+@keyframes lanternFloat {
+  0% {
+    transform: translateY(12vh) translateX(0);
+    opacity: 0;
+  }
+  12% {
+    opacity: 1;
+  }
+  55% {
+    transform: translateY(-42vh) translateX(14px);
+  }
+  88% {
+    opacity: 0.85;
+  }
+  100% {
+    transform: translateY(-92vh) translateX(-8px);
+    opacity: 0;
+  }
+}
+.anim-lantern {
+  animation: lanternFloat 22s linear infinite;
+  will-change: transform, opacity;
+}
+
+@keyframes heartBeat {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  12% {
+    transform: scale(1.22);
+  }
+  24% {
+    transform: scale(1);
+  }
+  36% {
+    transform: scale(1.14);
+  }
+  48% {
+    transform: scale(1);
+  }
+}
+.anim-heart {
+  animation: heartBeat 2.8s ease-in-out infinite;
+  transform-origin: center;
+  transform-box: fill-box;
+}
+
+@keyframes floaty {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+.anim-floaty {
+  animation: floaty 5s ease-in-out infinite;
+}
+
+/* ────────────────────────────────────────────────────────────────────────────
+   Accessibility helpers
+   ──────────────────────────────────────────────────────────────────────── */
+.skip-link {
+  position: fixed;
+  top: -100px;
+  left: 12px;
+  z-index: 100;
+  padding: 12px 16px;
+  font-family: var(--font-arcade);
+  font-size: 0.65rem;
+  background: var(--color-gold);
+  color: var(--color-ink);
+  transition: top 150ms ease;
+}
+.skip-link:focus-visible {
+  top: 12px;
+}
+
+a:focus-visible,
+button:focus-visible,
+[role="button"]:focus-visible {
+  outline: 3px solid var(--color-gold);
+  outline-offset: 3px;
+}
+.pixel-btn:focus-visible {
+  outline: none; /* uses its own inner ring above */
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  .reveal {
+    opacity: 1;
+    transform: none;
+  }
+}

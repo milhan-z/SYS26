@@ -1,0 +1,163 @@
+"use client";
+
+import { useCallback, useEffect, useRef, useState } from "react";
+import { SECTIONS, site } from "@/data/site";
+import { CloseIcon, Emblem, HeartIcon, MenuIcon } from "@/components/icons";
+
+/**
+ * Fixed game-HUD header: emblem + title, an XP-style scroll progress bar,
+ * and a "quest log" menu for jumping between the five chapters.
+ */
+export function Hud() {
+  const [progress, setProgress] = useState(0);
+  const [menuOpen, setMenuOpen] = useState(false);
+  const menuButtonRef = useRef<HTMLButtonElement>(null);
+  const firstLinkRef = useRef<HTMLAnchorElement>(null);
+
+  // XP bar — throttled with rAF
+  useEffect(() => {
+    let raf = 0;
+    const update = () => {
+      raf = 0;
+      const doc = document.documentElement;
+      const total = doc.scrollHeight - window.innerHeight;
+      setProgress(total > 0 ? Math.min(1, window.scrollY / total) : 0);
+    };
+    const onScroll = () => {
+      if (!raf) raf = requestAnimationFrame(update);
+    };
+    update();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll);
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
+      if (raf) cancelAnimationFrame(raf);
+    };
+  }, []);
+
+  const closeMenu = useCallback((restoreFocus = true) => {
+    setMenuOpen(false);
+    if (restoreFocus) menuButtonRef.current?.focus();
+  }, []);
+
+  // menu: Escape to close, lock body scroll, focus first item
+  useEffect(() => {
+    if (!menuOpen) return;
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key === "Escape") closeMenu();
+    };
+    document.addEventListener("keydown", onKey);
+    document.body.style.overflow = "hidden";
+    firstLinkRef.current?.focus();
+    return () => {
+      document.removeEventListener("keydown", onKey);
+      document.body.style.overflow = "";
+    };
+  }, [menuOpen, closeMenu]);
+
+  return (
+    <>
+      <header className="fixed inset-x-0 top-0 z-40">
+        <div className="border-b-4 border-outline bg-wood-deep/95 backdrop-blur-[2px]">
+          <div className="mx-auto flex h-14 max-w-5xl items-center justify-between gap-3 px-3 sm:px-6">
+            <a
+              href="#invitation"
+              className="flex min-h-11 items-center gap-2.5"
+              aria-label={`${site.brand.name} — back to top`}
+            >
+              <span className="pix-sm shrink-0">
+                <Emblem size={34} />
+              </span>
+              <span className="font-arcade text-[0.58rem] leading-relaxed text-cream sm:text-[0.65rem]">
+                {site.brand.name}
+              </span>
+            </a>
+            <button
+              ref={menuButtonRef}
+              type="button"
+              onClick={() => setMenuOpen((open) => !open)}
+              aria-expanded={menuOpen}
+              aria-controls="quest-menu"
+              aria-label={menuOpen ? "Close chapter menu" : "Open chapter menu"}
+              className="pix-sm flex size-11 items-center justify-center bg-wood text-gold transition-colors hover:bg-wood-light"
+            >
+              {menuOpen ? <CloseIcon size={22} /> : <MenuIcon size={22} />}
+            </button>
+          </div>
+          {/* XP-style progress bar */}
+          <div
+            className="h-2 w-full bg-[#0d0804]"
+            role="progressbar"
+            aria-label="Reading progress"
+            aria-valuemin={0}
+            aria-valuemax={100}
+            aria-valuenow={Math.round(progress * 100)}
+          >
+            <div
+              className="h-full bg-gradient-to-r from-leaf-dark via-leaf to-[#c5e86c] transition-[width] duration-150 ease-out"
+              style={{ width: `${progress * 100}%` }}
+            />
+          </div>
+        </div>
+      </header>
+
+      {/* quest-log menu */}
+      {menuOpen ? (
+        <div
+          id="quest-menu"
+          role="dialog"
+          aria-modal="true"
+          aria-label="Chapter menu"
+          className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto bg-[#0d0804]/88 px-4 pb-10 pt-20"
+          onClick={(event) => {
+            if (event.target === event.currentTarget) closeMenu();
+          }}
+        >
+          <div className="pix w-full max-w-sm bg-outline p-1">
+            <div className="pix panel-wood p-5">
+              <div className="mb-4 flex items-center justify-between">
+                <h2 className="font-arcade text-[0.65rem] text-gold">
+                  ⭐ QUEST LOG
+                </h2>
+                <button
+                  type="button"
+                  onClick={() => closeMenu()}
+                  aria-label="Close chapter menu"
+                  className="pix-sm flex size-10 items-center justify-center bg-wood-dark text-cream hover:text-gold"
+                >
+                  <CloseIcon size={18} />
+                </button>
+              </div>
+              <nav aria-label="Page chapters">
+                <ul className="flex flex-col gap-2">
+                  {SECTIONS.map((section, index) => (
+                    <li key={section.id}>
+                      <a
+                        ref={index === 0 ? firstLinkRef : undefined}
+                        href={`#${section.id}`}
+                        onClick={() => closeMenu(false)}
+                        className="pix-sm group flex min-h-12 items-center gap-3 bg-wood-dark px-4 py-2.5 transition-colors hover:bg-wood-light"
+                      >
+                        <span className="font-arcade text-[0.6rem] text-gold/80">
+                          {section.num}
+                        </span>
+                        <span className="font-pixel text-lg text-cream group-hover:text-glow">
+                          {section.label}
+                        </span>
+                        <HeartIcon
+                          size={14}
+                          className="ml-auto opacity-0 transition-opacity group-hover:opacity-100"
+                        />
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </nav>
+            </div>
+          </div>
+        </div>
+      ) : null}
+    </>
+  );
+}
