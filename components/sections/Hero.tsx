@@ -2,20 +2,15 @@ import Image from "next/image";
 import { site } from "@/data/site";
 import { SunsetScene } from "@/components/scene/SunsetScene";
 import { HeartDivider } from "@/components/ui/HeartDivider";
-import { PixelButton } from "@/components/ui/PixelButton";
-import { ArrowDownIcon, HeartIcon } from "@/components/icons";
+import { HeartIcon } from "@/components/icons";
 
 /**
  * Chapter 1 — the opening invitation. A full-screen golden-hour scene of
- * the Kampong with the invitation title floating in the sunset sky.
+ * the kampong with the invitation title floating in the sunset sky.
  */
 export function Hero() {
   return (
-    <section
-      id="invitation"
-      aria-label="Opening invitation"
-      className="relative flex min-h-svh flex-col overflow-clip"
-    >
+    <section id="invitation" aria-label="Opening invitation" className="slide">
       {/* sunset sky */}
       <div
         className="absolute inset-0 bg-gradient-to-b from-[#33204e] via-[#7a3b6e] via-45% to-[#e0784f]"
@@ -38,13 +33,13 @@ export function Hero() {
 
       {/* gentle scrim so the title stays readable */}
       <div
-        className="absolute inset-x-0 top-0 h-44 bg-gradient-to-b from-night/70 to-transparent"
+        className="absolute inset-x-0 top-0 z-[2] h-44 bg-gradient-to-b from-night/70 to-transparent"
         aria-hidden="true"
       />
 
       {/* content */}
-      <div className="relative z-10 mx-auto flex w-full max-w-xl flex-1 flex-col items-center px-5 pb-24 pt-28 text-center sm:pt-32">
-        <div className="pix bg-outline/80 p-1 -rotate-1">
+      <div className="slide-body max-w-xl items-center text-center">
+        <div className="pix -rotate-1 bg-outline/80 p-1">
           <p className="pix panel-parchment px-5 py-2.5 font-arcade text-[0.6rem] text-ink sm:text-[0.7rem]">
             {site.hero.kicker}
           </p>
@@ -67,7 +62,7 @@ export function Hero() {
               {site.hero.sign.map((line) => (
                 <li
                   key={line}
-                  className="font-arcade text-[0.58rem] leading-loose text-cream/90"
+                  className="font-arcade text-[0.58rem] uppercase leading-loose tracking-wide text-cream/90"
                 >
                   {line}
                 </li>
@@ -76,23 +71,6 @@ export function Hero() {
             <HeartIcon size={14} className="mx-auto mt-2" />
           </div>
         </div>
-
-        <PixelButton href="#details" className="mt-9">
-          {site.hero.cta} <ArrowDownIcon size={16} />
-        </PixelButton>
-      </div>
-
-      {/* scroll hint */}
-      <div
-        className="absolute inset-x-0 bottom-4 z-10 flex flex-col items-center gap-1.5"
-        aria-hidden="true"
-      >
-        <span className="anim-bob text-glow">
-          <ArrowDownIcon size={22} />
-        </span>
-        <span className="font-arcade text-[0.55rem] text-cream/90 text-pixel-shadow-sm">
-          {site.hero.scrollHint}
-        </span>
       </div>
     </section>
   );

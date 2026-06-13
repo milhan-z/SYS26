@@ -313,3 +313,74 @@ export function Emblem({ size = 36, className }: IconProps) {
     </svg>
   );
 }
+
+export function LinkIcon(props: IconProps) {
+  return (
+    <Px {...props}>
+      <g fill="currentColor">
+        <rect x="6" y="7" width="4" height="2" />
+        <rect x="2" y="5" width="3" height="2" />
+        <rect x="2" y="9" width="3" height="2" />
+        <rect x="1" y="6" width="2" height="4" />
+        <rect x="4" y="7" width="3" height="2" />
+        <rect x="11" y="5" width="3" height="2" />
+        <rect x="11" y="9" width="3" height="2" />
+        <rect x="13" y="6" width="2" height="4" />
+        <rect x="9" y="7" width="3" height="2" />
+      </g>
+    </Px>
+  );
+}
+
+export function CopyIcon(props: IconProps) {
+  return (
+    <Px {...props}>
+      <g fill="currentColor">
+        {/* back page */}
+        <rect x="6" y="2" width="8" height="2" />
+        <rect x="6" y="2" width="2" height="7" />
+        <rect x="12" y="2" width="2" height="7" />
+        <rect x="6" y="8" width="3" height="2" />
+        <rect x="12" y="8" width="2" height="2" />
+        {/* front page */}
+        <rect x="2" y="6" width="9" height="2" />
+        <rect x="2" y="6" width="2" height="8" />
+        <rect x="9" y="6" width="2" height="8" />
+        <rect x="2" y="12" width="9" height="2" />
+      </g>
+    </Px>
+  );
+}
+
+export function CheckIcon(props: IconProps) {
+  return (
+    <Px {...props}>
+      <g fill="currentColor">
+        <rect x="2" y="7" width="2" height="2" />
+        <rect x="4" y="9" width="2" height="2" />
+        <rect x="6" y="11" width="2" height="2" />
+        <rect x="8" y="8" width="2" height="3" />
+        <rect x="10" y="5" width="2" height="3" />
+        <rect x="12" y="3" width="2" height="3" />
+      </g>
+    </Px>
+  );
+}
+
+export function BuildingIcon(props: IconProps) {
+  return (
+    <Px {...props}>
+      <g fill="currentColor">
+        <rect x="7" y="1" width="2" height="2" />
+        <rect x="4" y="3" width="8" height="2" />
+        <rect x="2" y="5" width="12" height="1" />
+        <rect x="1" y="6" width="14" height="2" />
+        <rect x="2" y="8" width="2" height="5" />
+        <rect x="5" y="8" width="2" height="5" />
+        <rect x="9" y="8" width="2" height="5" />
+        <rect x="12" y="8" width="2" height="5" />
+        <rect x="1" y="13" width="14" height="2" />
+      </g>
+    </Px>
+  );
+}

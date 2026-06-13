@@ -37,13 +37,16 @@ export interface SiteConfig {
     subtitle: string;
     /** Lines painted on the little wooden sign. */
     sign: string[];
-    cta: string;
     scrollHint: string;
     /**
      * Optional photo/artwork to use instead of the built-in pixel scene,
      * e.g. "/images/hero.jpg". Keep `null` to use the illustrated sunset.
      */
     backgroundImage: string | null;
+  };
+  details: {
+    heading: string;
+    intro: string;
   };
   event: {
     /** Used for the calendar entry title. */
@@ -52,7 +55,7 @@ export interface SiteConfig {
     dateLabel: string;
     /** Human-readable time range, exactly as it should appear on the card. */
     timeLabel: string;
-    /** ISO datetime (with timezone offset) — drives the countdown + calendar. */
+    /** ISO datetime (with timezone offset) — drives the calendar entry. */
     start: string;
     /** ISO datetime (with timezone offset) — drives the calendar entry end. */
     end: string;
@@ -63,14 +66,16 @@ export interface SiteConfig {
     note: string;
   };
   venue: {
+    heading: string;
     name: string;
-    tagline: string;
     addressLines: string[];
-    /** Full Google Maps link opened by the "Open in Google Maps" button. */
+    /** Short label shown on the little map pin. */
+    mapLabel: string;
+    /** Full Google Maps link opened by the "View Map" button. */
     mapsUrl: string;
     /**
      * Optional venue photo, e.g. "/images/venue.jpg".
-     * Keep `null` to show the built-in pixel illustration of the Kampong.
+     * Keep `null` to show the built-in pixel illustration of the venue.
      */
     image: string | null;
     imageAlt: string;
@@ -78,20 +83,24 @@ export interface SiteConfig {
   memories: {
     titleId: string;
     titleEn: string;
-    intro: string;
+    introId: string;
+    introEn: string;
     items: GalleryItem[];
-    /** Small note shown under the gallery while photos are placeholders. */
-    note: string;
   };
   rsvp: {
+    /** Big pixel word, e.g. "RSVP". */
     heading: string;
-    headingId: string;
+    /** One-line invitation under the heading. */
     message: string;
-    deadlineLabel: string;
+    /** Main green button — top line. */
     buttonLabel: string;
-    /** External RSVP form (Google Form, Typeform, …). */
+    /** Main green button — small second line. */
+    buttonSub: string;
+    /** Where the button + copy action point (real form link). */
     url: string;
-    closing: string;
+    /** Pretty version of the link shown in the copy box. */
+    displayUrl: string;
+    deadlineLabel: string;
   };
   footer: {
     line: string;
@@ -103,7 +112,7 @@ export const site: SiteConfig = {
   meta: {
     title: "See You Soon — ITS Global Engagement",
     description:
-      "You're invited! One last gathering with ITS Global Engagement at ITS Global Kampong — an afternoon of stories, laughter, and goodbyes that are really just 'see you soon'.",
+      "You're invited! One last gathering with ITS Global Engagement — an afternoon of stories, laughter, and goodbyes that are really just 'see you soon'.",
   },
 
   brand: {
@@ -116,44 +125,50 @@ export const site: SiteConfig = {
     title: "See You Soon",
     subtitle: "ITS Global Engagement",
     sign: ["Great people.", "Meaningful work.", "Global impact."],
-    cta: "Open the invitation",
     scrollHint: "scroll to continue",
     backgroundImage: null,
   },
 
+  details: {
+    heading: "Event Details",
+    intro: "All the info you need for the big day!",
+  },
+
   event: {
     title: "See You Soon — ITS Global Engagement",
-    dateLabel: "Saturday, 27 June 2026",
-    timeLabel: "10:00 AM – 3:00 PM (WIB)",
-    start: "2026-06-27T10:00:00+07:00",
-    end: "2026-06-27T15:00:00+07:00",
+    dateLabel: "Saturday, 21 June 2025",
+    timeLabel: "10:00 AM – 3:00 PM",
+    start: "2025-06-21T10:00:00+07:00",
+    end: "2025-06-21T15:00:00+07:00",
     dresscode: {
-      main: "Smart casual",
+      main: "Smart Casual",
       hint: "a touch of green is encouraged",
     },
-    note: "A light lunch is on us. More little surprises will be shared closer to the day.",
+    note: "More location details will be shared closer to the event.",
   },
 
   venue: {
-    name: "ITS Global Kampong",
-    tagline: "the home of our adventures",
+    heading: "Venue",
+    name: "ITS Global Hub",
     addressLines: [
-      "ITS Global Engagement Office",
-      "Jl. Teknik Kimia No. 1, Kampus ITS",
-      "Keputih, Sukolilo, Surabaya",
-      "Jawa Timur 60111, Indonesia",
+      "Jl. Teknik Kimia No.1",
+      "Kampus ITS, Keputih",
+      "Sukolilo, Surabaya",
+      "Jawa Timur 60111",
+      "Indonesia",
     ],
+    mapLabel: "ITS Global Hub",
     mapsUrl:
       "https://www.google.com/maps/search/?api=1&query=ITS+Global+Engagement+Institut+Teknologi+Sepuluh+Nopember+Sukolilo+Surabaya",
     image: null,
-    imageAlt:
-      "ITS Global Kampong — the ITS Global Engagement building at golden hour",
+    imageAlt: "ITS Global Hub — the venue building at golden hour",
   },
 
   memories: {
     titleId: "Kenangan",
     titleEn: "Memories",
-    intro: "Kenangan bersama — moments we've shared",
+    introId: "Kenangan bersama",
+    introEn: "Moments we've shared",
     items: [
       {
         src: null,
@@ -186,28 +201,26 @@ export const site: SiteConfig = {
         caption: "Different paths, same purpose",
       },
     ],
-    note: "This wall is still being decorated — our real photos are on their way. 📷",
   },
 
   rsvp: {
-    heading: "One last quest together",
-    headingId: "Sampai jumpa lagi",
-    message:
-      "Every great story deserves a proper ending — and every goodbye between friends is really just a 'see you soon'. Come spend one more afternoon with the people who made this journey unforgettable. Bring your stories, your laughter, and maybe a tissue or two.",
-    deadlineLabel: "Please RSVP by Saturday, 20 June 2026",
-    buttonLabel: "RSVP — I'll be there",
-    // ⬇️ Replace with your real Google Form / Typeform link.
-    url: "https://forms.gle/REPLACE_WITH_YOUR_FORM",
-    closing: "Wherever the next adventure takes us — see you soon. ♥",
+    heading: "RSVP",
+    message: "Let us know if you're joining!",
+    buttonLabel: "Yes, I'll be there",
+    buttonSub: "Open RSVP Link",
+    // ⬇️ Replace with your real Google Form / Typeform / RSVP link.
+    url: "https://its.ui.ac.id/rsvp/see-you-soon",
+    displayUrl: "its.ui.ac.id/rsvp/see-you-soon",
+    deadlineLabel: "Kindly respond by May 25, 2025",
   },
 
   footer: {
     line: "Made with ♥ by ITS Global Engagement",
-    subline: "Surabaya · 2026",
+    subline: "Surabaya · 2025",
   },
 };
 
-/** Ordered list of page sections — used by the HUD menu and progress bar. */
+/** Ordered list of page sections — used by the HUD menu and page nav. */
 export const SECTIONS = [
   { id: "invitation", label: "The Invitation", num: "01" },
   { id: "details", label: "Event Details", num: "02" },

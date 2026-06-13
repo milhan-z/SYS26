@@ -1,44 +1,35 @@
 import { site } from "@/data/site";
-import { BlockEdge } from "@/components/scene/BlockEdge";
+import { SkyBackdrop } from "@/components/scene/SkyBackdrop";
 import { Gallery } from "@/components/Gallery";
-import { SectionHeader } from "@/components/ui/SectionHeader";
 import { Reveal } from "@/components/ui/Reveal";
-import { CameraIcon } from "@/components/icons";
 
 /**
  * Chapter 4 — the memory wall. Polaroids of moments together; tapping one
  * opens the lightbox. Photos are configured in data/site.ts → memories.
  */
 export function Memories() {
-  const hasPlaceholders = site.memories.items.some((item) => !item.src);
-
   return (
-    <section
-      id="memories"
-      aria-labelledby="memories-heading"
-      className="bg-[#2c1f13]"
-    >
-      <BlockEdge fill="#3e2350" id="memories" />
-      <div className="mx-auto max-w-4xl px-5 pb-20 pt-12 sm:pt-16">
-        <SectionHeader
-          chapter={4}
-          title={`${site.memories.titleId} / ${site.memories.titleEn}`}
-          subtitle={site.memories.intro}
-          headingId="memories-heading"
-        />
+    <section id="memories" aria-labelledby="memories-heading" className="slide">
+      <SkyBackdrop tone="rose" />
+      <div className="scene-scrim" />
 
-        <div className="mt-12">
-          <Gallery items={site.memories.items} />
-        </div>
+      <div className="slide-body max-w-2xl gap-4">
+        <Reveal className="flex flex-col items-center gap-2 text-center">
+          <div className="pix -rotate-1 bg-outline p-1">
+            <h2
+              id="memories-heading"
+              className="pix panel-parchment px-6 py-2.5 font-pixel text-2xl font-bold text-ink sm:text-3xl"
+            >
+              {site.memories.titleId} / {site.memories.titleEn}
+            </h2>
+          </div>
+          <p className="font-body text-sm leading-tight text-cream/90 sm:text-base">
+            <span className="block">{site.memories.introId}</span>
+            <span className="block">{site.memories.introEn}</span>
+          </p>
+        </Reveal>
 
-        {hasPlaceholders ? (
-          <Reveal className="mt-12 flex justify-center">
-            <p className="pix-sm inline-flex items-center gap-2.5 bg-wood px-4 py-3 font-body text-sm text-cream/85">
-              <CameraIcon size={20} className="shrink-0" />
-              {site.memories.note}
-            </p>
-          </Reveal>
-        ) : null}
+        <Gallery items={site.memories.items} />
       </div>
     </section>
   );

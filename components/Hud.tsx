@@ -5,36 +5,13 @@ import { SECTIONS, site } from "@/data/site";
 import { CloseIcon, Emblem, HeartIcon, MenuIcon } from "@/components/icons";
 
 /**
- * Fixed game-HUD header: emblem + title, an XP-style scroll progress bar,
- * and a "quest log" menu for jumping between the five chapters.
+ * Fixed game-HUD header: framed emblem + title on the left, a "quest log"
+ * menu on the right for jumping between the five chapters.
  */
 export function Hud() {
-  const [progress, setProgress] = useState(0);
   const [menuOpen, setMenuOpen] = useState(false);
   const menuButtonRef = useRef<HTMLButtonElement>(null);
   const firstLinkRef = useRef<HTMLAnchorElement>(null);
-
-  // XP bar — throttled with rAF
-  useEffect(() => {
-    let raf = 0;
-    const update = () => {
-      raf = 0;
-      const doc = document.documentElement;
-      const total = doc.scrollHeight - window.innerHeight;
-      setProgress(total > 0 ? Math.min(1, window.scrollY / total) : 0);
-    };
-    const onScroll = () => {
-      if (!raf) raf = requestAnimationFrame(update);
-    };
-    update();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    window.addEventListener("resize", onScroll);
-    return () => {
-      window.removeEventListener("scroll", onScroll);
-      window.removeEventListener("resize", onScroll);
-      if (raf) cancelAnimationFrame(raf);
-    };
-  }, []);
 
   const closeMenu = useCallback((restoreFocus = true) => {
     setMenuOpen(false);
@@ -58,18 +35,20 @@ export function Hud() {
 
   return (
     <>
-      <header className="fixed inset-x-0 top-0 z-40">
-        <div className="border-b-4 border-outline bg-wood-deep/95 backdrop-blur-[2px]">
-          <div className="mx-auto flex h-14 max-w-5xl items-center justify-between gap-3 px-3 sm:px-6">
+      <header className="fixed inset-x-0 top-0 z-40 px-2 pt-2 sm:px-3 sm:pt-3">
+        <div className="pix mx-auto max-w-3xl bg-outline/90 p-1 backdrop-blur-[2px]">
+          <div className="pix panel-wood flex items-center justify-between gap-3 px-2.5 py-2 sm:px-3">
             <a
               href="#invitation"
               className="flex min-h-11 items-center gap-2.5"
               aria-label={`${site.brand.name} — back to top`}
             >
-              <span className="pix-sm shrink-0">
-                <Emblem size={34} />
+              <span className="pix-sm shrink-0 bg-outline/70 p-1">
+                <span className="pix-sm block">
+                  <Emblem size={30} />
+                </span>
               </span>
-              <span className="font-arcade text-[0.58rem] leading-relaxed text-cream sm:text-[0.65rem]">
+              <span className="font-arcade text-[0.58rem] leading-relaxed text-cream sm:text-[0.66rem]">
                 {site.brand.name}
               </span>
             </a>
@@ -80,24 +59,10 @@ export function Hud() {
               aria-expanded={menuOpen}
               aria-controls="quest-menu"
               aria-label={menuOpen ? "Close chapter menu" : "Open chapter menu"}
-              className="pix-sm flex size-11 items-center justify-center bg-wood text-gold transition-colors hover:bg-wood-light"
+              className="pix-sm flex size-11 items-center justify-center bg-wood-dark text-gold transition-colors hover:bg-wood-light"
             >
               {menuOpen ? <CloseIcon size={22} /> : <MenuIcon size={22} />}
             </button>
-          </div>
-          {/* XP-style progress bar */}
-          <div
-            className="h-2 w-full bg-[#0d0804]"
-            role="progressbar"
-            aria-label="Reading progress"
-            aria-valuemin={0}
-            aria-valuemax={100}
-            aria-valuenow={Math.round(progress * 100)}
-          >
-            <div
-              className="h-full bg-gradient-to-r from-leaf-dark via-leaf to-[#c5e86c] transition-[width] duration-150 ease-out"
-              style={{ width: `${progress * 100}%` }}
-            />
           </div>
         </div>
       </header>

@@ -37,8 +37,8 @@ function Polaroid({
           className="absolute -top-2.5 left-1/2 z-10 h-5 w-16 -translate-x-1/2 rotate-3 bg-parchment/70"
         />
         <span className="pix block bg-outline p-1">
-          <span className="pix block bg-cream p-2 pb-3 sm:p-2.5 sm:pb-4">
-            <span className="relative block aspect-[4/3] overflow-hidden bg-wood-dark">
+          <span className="pix block bg-cream p-1.5 pb-2.5 sm:p-2 sm:pb-3">
+            <span className="relative block aspect-[3/2] overflow-hidden bg-wood-dark">
               {item.src ? (
                 <Image
                   src={item.src}
@@ -51,7 +51,7 @@ function Polaroid({
                 <MemoryPlaceholder seed={index} />
               )}
             </span>
-            <span className="mt-2.5 flex items-center justify-between gap-2 px-1">
+            <span className="mt-1.5 flex items-center justify-between gap-2 px-1">
               <span className="font-pixel text-sm leading-tight text-ink sm:text-base">
                 {item.caption}
               </span>
@@ -104,7 +104,7 @@ export function Gallery({ items }: { items: GalleryItem[] }) {
 
   return (
     <>
-      <ul className="grid grid-cols-2 gap-x-4 gap-y-7 sm:gap-x-6 sm:gap-y-9 lg:grid-cols-3">
+      <ul className="grid grid-cols-2 gap-x-3 gap-y-3 sm:gap-x-5 sm:gap-y-5 lg:grid-cols-3">
         {items.map((item, index) => (
           <li key={index}>
             <Polaroid item={item} index={index} onOpen={setOpen} />

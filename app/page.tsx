@@ -1,5 +1,5 @@
 import { Hud } from "@/components/Hud";
-import { Footer } from "@/components/Footer";
+import { PageNav } from "@/components/PageNav";
 import { Hero } from "@/components/sections/Hero";
 import { Details } from "@/components/sections/Details";
 import { Venue } from "@/components/sections/Venue";
@@ -17,7 +17,7 @@ export default function InvitationPage() {
         <Memories />
         <Rsvp />
       </main>
-      <Footer />
+      <PageNav />
     </>
   );
 }

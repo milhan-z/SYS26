@@ -42,8 +42,9 @@
    ──────────────────────────────────────────────────────────────────────── */
 html {
   scroll-behavior: smooth;
-  /* keep anchored sections clear of the fixed HUD */
-  scroll-padding-top: 64px;
+  /* full-screen slide deck: each <section class="slide"> snaps into view */
+  scroll-snap-type: y proximity;
+  scroll-padding-top: 0;
 }
 
 body {
@@ -77,6 +78,48 @@ body {
 img,
 svg {
   image-rendering: pixelated;
+}
+
+/* ────────────────────────────────────────────────────────────────────────────
+   Slide deck — one full-screen "page" per chapter
+   ──────────────────────────────────────────────────────────────────────── */
+.slide {
+  position: relative;
+  min-height: 100svh;
+  scroll-snap-align: start;
+  display: flex;
+  flex-direction: column;
+  overflow: clip;
+}
+
+/* content sits clear of the fixed HUD (top) and page-nav (bottom) */
+.slide-body {
+  position: relative;
+  z-index: 10;
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  justify-content: center;
+  width: 100%;
+  margin-inline: auto;
+  padding-top: 4.25rem;
+  padding-bottom: 6.5rem;
+  padding-inline: 1.1rem;
+}
+
+/* darkening wash so text stays legible over the painted scenes */
+.scene-scrim {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: linear-gradient(
+    180deg,
+    rgba(17, 10, 28, 0.6) 0%,
+    rgba(17, 10, 28, 0.18) 26%,
+    rgba(17, 10, 28, 0.32) 62%,
+    rgba(17, 10, 28, 0.72) 100%
+  );
+  pointer-events: none;
 }
 
 /* ────────────────────────────────────────────────────────────────────────────
