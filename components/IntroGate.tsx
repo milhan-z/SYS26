@@ -132,7 +132,7 @@ export function IntroGate() {
         </div>
 
         <p className="intro-hint font-arcade text-[0.46rem] tracking-wide text-cream/55">
-          tap to begin · with sound ♪
+          an invitation awaits
         </p>
       </div>
     </div>

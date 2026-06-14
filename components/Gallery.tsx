@@ -195,7 +195,7 @@ export function Gallery({ albums }: { albums: MemoryAlbum[] }) {
   return (
     <>
       {/* ── the wall of moments ── */}
-      <ul className="grid grid-cols-2 gap-x-3 gap-y-5 sm:gap-x-5 sm:gap-y-7 lg:grid-cols-3">
+      <ul className="grid grid-cols-2 gap-x-2 gap-y-3 sm:gap-x-5 sm:gap-y-6 lg:grid-cols-3">
         {albums.map((item, index) => (
           <li key={index}>
             <AlbumCover

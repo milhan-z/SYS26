@@ -97,8 +97,6 @@ export interface SiteConfig {
   memories: {
     titleId: string;
     titleEn: string;
-    introId: string;
-    introEn: string;
     albums: MemoryAlbum[];
   };
   rsvp: {
@@ -153,7 +151,7 @@ export const site: SiteConfig = {
     kicker: "you're invited to...",
     title: "See You Soon",
     subtitle: "ITS Global Engagement",
-    sign: ["Great people.", "Meaningful work.", "Global impact."],
+    sign: ["Good people", "Work that matters", "See you soon"],
     scrollHint: "scroll to continue",
     backgroundImage: null,
   },
@@ -196,9 +194,7 @@ export const site: SiteConfig = {
   memories: {
     titleId: "Kenangan",
     titleEn: "Memories",
-    introId: "Ketuk satu momen untuk membuka albumnya",
-    introEn: "Tap a moment to open its album",
-    // Each entry is a *moment* (a category). Its `cover` is the polaroid on the
+    // Each entry is a moment (a category). Its `cover` is the polaroid on the
     // wall; tapping it opens every photo in `photos`. Drop real files into
     // /public/images/gallery/ and point `cover`/`src` at them. Items left as
     // `null` show a friendly pixel placeholder, so you can build albums while
@@ -206,19 +202,19 @@ export const site: SiteConfig = {
     albums: [
       {
         cover: null,
-        title: "Together, we shine!",
-        alt: "The team smiling together after an international event",
+        title: "The whole crew",
+        alt: "The team together after an international event",
         photos: [
-          { src: null, alt: "The whole team on stage", caption: "On stage together" },
+          { src: null, alt: "Everyone on stage", caption: "On stage together" },
           { src: null, alt: "Group photo after the ceremony", caption: "After the ceremony" },
-          { src: null, alt: "Candid laughter backstage", caption: "Backstage laughs" },
-          { src: null, alt: "A toast to the team", caption: "Cheers to us" },
+          { src: null, alt: "Candid laughter backstage", caption: "Backstage" },
+          { src: null, alt: "A toast to the team", caption: "Cheers" },
         ],
       },
       {
         cover: null,
-        title: "Ideas. Impact. Us.",
-        alt: "Brainstorming around a table full of sticky notes",
+        title: "The ideas that moved us",
+        alt: "Brainstorming session with sticky notes everywhere",
         photos: [
           { src: null, alt: "Whiteboard full of ideas", caption: "The big board" },
           { src: null, alt: "Sticky notes everywhere", caption: "Every idea counts" },
@@ -227,43 +223,43 @@ export const site: SiteConfig = {
       },
       {
         cover: null,
-        title: "Celebrating every step",
-        alt: "Celebrating a successful program with the whole crew",
+        title: "Every win counted",
+        alt: "Celebrating a successful program together",
         photos: [
-          { src: null, alt: "Confetti and cheers", caption: "We did it!" },
-          { src: null, alt: "Cutting the cake", caption: "Sweet success" },
+          { src: null, alt: "Confetti and cheers", caption: "We did it" },
+          { src: null, alt: "Cutting the cake", caption: "Celebration time" },
           { src: null, alt: "High fives all around", caption: "High fives" },
           { src: null, alt: "Holding up the trophy", caption: "For the books" },
         ],
       },
       {
         cover: null,
-        title: "Night talks, big dreams",
+        title: "Late nights, big plans",
         alt: "Late-night conversations under lantern light",
         photos: [
           { src: null, alt: "Lanterns glowing overhead", caption: "Under the lanterns" },
           { src: null, alt: "Stories by the fire", caption: "Storytime" },
-          { src: null, alt: "Dreaming out loud", caption: "Big dreams" },
+          { src: null, alt: "Deep in conversation", caption: "Big plans" },
         ],
       },
       {
         cover: null,
-        title: "Friendships that last",
-        alt: "Friends gathered around a campfire",
+        title: "The people you keep",
+        alt: "Friends gathered together",
         photos: [
           { src: null, alt: "Arms around shoulders", caption: "Side by side" },
-          { src: null, alt: "Inside jokes", caption: "Inside jokes" },
-          { src: null, alt: "One more group hug", caption: "Group hug" },
-          { src: null, alt: "Promising to keep in touch", caption: "See you soon" },
+          { src: null, alt: "Laughing together", caption: "Inside jokes" },
+          { src: null, alt: "Group hug", caption: "Group hug" },
+          { src: null, alt: "One last photo", caption: "See you soon" },
         ],
       },
       {
         cover: null,
-        title: "Different paths, same purpose",
+        title: "Where it all began",
         alt: "The team in front of the ITS Global Engagement office",
         photos: [
           { src: null, alt: "In front of the office", caption: "Where it began" },
-          { src: null, alt: "Everyone's next chapter", caption: "New chapters" },
+          { src: null, alt: "Looking ahead", caption: "New chapters" },
           { src: null, alt: "One last photo together", caption: "One last frame" },
         ],
       },
@@ -278,7 +274,7 @@ export const site: SiteConfig = {
     // ⬇️ Replace with your real Google Form / Typeform / RSVP link.
     url: "https://its.ui.ac.id/rsvp/see-you-soon",
     displayUrl: "its.ui.ac.id/rsvp/see-you-soon",
-    deadlineLabel: "Kindly respond by May 25, 2025",
+    deadlineLabel: "Please let us know by May 25, 2025",
   },
 
   audio: {

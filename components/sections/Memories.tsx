@@ -13,8 +13,8 @@ export function Memories() {
       <SkyBackdrop tone="rose" />
       <div className="scene-scrim" />
 
-      <div className="slide-body max-w-2xl gap-4">
-        <Reveal className="flex flex-col items-center gap-2 text-center">
+      <div className="slide-body max-w-2xl gap-3">
+        <Reveal className="flex flex-col items-center text-center">
           <div className="pix -rotate-1 bg-outline p-1">
             <h2
               id="memories-heading"
@@ -23,13 +23,12 @@ export function Memories() {
               {site.memories.titleId} / {site.memories.titleEn}
             </h2>
           </div>
-          <p className="font-body text-sm leading-tight text-cream/90 sm:text-base">
-            <span className="block">{site.memories.introId}</span>
-            <span className="block">{site.memories.introEn}</span>
-          </p>
         </Reveal>
 
-        <Gallery albums={site.memories.albums} />
+        {/* scrollable so cards are never clipped by page-nav on short screens */}
+        <div className="min-h-0 flex-1 overflow-y-auto pb-2">
+          <Gallery albums={site.memories.albums} />
+        </div>
       </div>
     </section>
   );
