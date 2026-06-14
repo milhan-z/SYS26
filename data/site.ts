@@ -283,9 +283,15 @@ export const site: SiteConfig = {
 
   audio: {
     enabled: true,
+    // Pre-trimmed clip (~39s, ~0.9MB) so it loads fast and starts instantly.
+    // It covers 00:44–01:23 of the original song; the loop points below are
+    // offsets *within this clip* (3s = the song's 00:47, 36s = 01:20). The few
+    // seconds of lead-in/tail keep the loop points interior, which is what
+    // makes the repeat perfectly seamless. To re-trim from a full song, run:
+    //   node scripts/trim-mp3.mjs "<full.mp3>" "public/audio/good-life.mp3" 44 83
     src: "/audio/good-life.mp3",
-    loopStart: 47, // 00:47
-    loopEnd: 80, // 01:20
+    loopStart: 3, // 00:47 in the original
+    loopEnd: 36, // 01:20 in the original
     volume: 0.4,
     label: "background music",
   },

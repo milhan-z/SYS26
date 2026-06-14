@@ -52,22 +52,32 @@ is a normal, fully-scrollable document.
 A track loops seamlessly once the visitor presses **Open Invitation** (browsers
 block audio until a tap, so it begins on that gesture). A floating pixel button
 (bottom-left) mutes/unmutes it. It uses the Web Audio API with sample-accurate
-`loopStart`/`loopEnd`, so a sub-section of a song repeats with no gap. Configure
-it in [`data/site.ts`](data/site.ts) → `audio`:
+`loopStart`/`loopEnd`, so a sub-section repeats with no gap.
+
+For fast loading, the shipped clip ([`public/audio/good-life.mp3`](public/audio/good-life.mp3))
+is **pre-trimmed** to ~39s (~0.9 MB instead of the full ~6 MB song), and the
+loop points are offsets *within that clip*. Configure it in
+[`data/site.ts`](data/site.ts) → `audio`:
 
 ```ts
 audio: {
   enabled: true,                 // set false to remove music entirely
   src: "/audio/good-life.mp3",   // a file inside /public
-  loopStart: 47,                 // 00:47 — start of the loop, in seconds
-  loopEnd: 80,                   // 01:20 — jumps back to loopStart seamlessly
+  loopStart: 3,                  // start of the loop, in seconds (here = the song's 00:47)
+  loopEnd: 36,                   // jumps back to loopStart seamlessly (= 01:20)
   volume: 0.4,                   // 0–1
   label: "background music",     // for the mute button's screen-reader label
 },
 ```
 
-To use a different song, drop the file in `public/audio/` and update `src`
-(plus `loopStart`/`loopEnd` for the section you want).
+To use a different song, run the lossless trimmer (keep a few seconds of
+lead-in/tail around your loop so the loop points stay interior — that's what
+keeps it gap-free), then point `loopStart`/`loopEnd` at the loop within the clip:
+
+```bash
+node scripts/trim-mp3.mjs "<full-song.mp3>" "public/audio/good-life.mp3" 44 83
+# e.g. 44→83 keeps 00:44–01:23; loop the 00:47–01:20 part → loopStart 3, loopEnd 36
+```
 
 ---
 

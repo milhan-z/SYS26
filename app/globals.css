@@ -119,6 +119,8 @@ svg {
   .slide-body {
     padding-top: calc(env(safe-area-inset-top) + 4.75rem);
     padding-bottom: calc(env(safe-area-inset-bottom) + 6.25rem);
+    /* tighten the stack so dense slides fit on short phones */
+    gap: 0.65rem !important;
   }
   /* drop purely-decorative repeats (the recurring title echo, scroll hint) */
   .hide-on-short {
@@ -482,7 +484,7 @@ html.js .intro-gate[data-phase] .intro-content > * {
       transparent 2px 16px
     ),
     linear-gradient(180deg, #ffd166 0%, #f5b942 60%, #e89a2e 100%);
-  animation: barFill 1.55s var(--ease-in-out-soft) forwards;
+  animation: barFill 0.95s var(--ease-in-out-soft) forwards;
 }
 @keyframes barFill {
   0% {

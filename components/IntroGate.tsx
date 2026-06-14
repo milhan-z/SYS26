@@ -34,7 +34,7 @@ export function IntroGate() {
       setPhase("ready");
       return;
     }
-    const t = setTimeout(() => setPhase("ready"), 1500);
+    const t = setTimeout(() => setPhase("ready"), 1000);
     return () => clearTimeout(t);
   }, []);
 
@@ -79,6 +79,7 @@ export function IntroGate() {
       role="dialog"
       aria-modal="true"
       aria-label={`Welcome — ${site.hero.title}`}
+      onClick={enter}
     >
       {/* opaque, self-contained backdrop */}
       <NightScene />
