@@ -25,10 +25,7 @@ export function Memories() {
           </div>
         </Reveal>
 
-        {/* scrollable so cards are never clipped by page-nav on short screens */}
-        <div className="no-scrollbar min-h-0 flex-1 overflow-y-auto pb-2">
-          <Gallery albums={site.memories.albums} />
-        </div>
+        <Gallery albums={site.memories.albums} />
       </div>
     </section>
   );
