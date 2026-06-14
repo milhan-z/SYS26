@@ -37,6 +37,12 @@
   --shadow-pixel: 0 6px 0 0 rgba(10, 5, 2, 0.45);
 }
 
+/* shared easing curves for a soft, "seamless" feel across the whole site */
+:root {
+  --ease-out-soft: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-in-out-soft: cubic-bezier(0.65, 0, 0.35, 1);
+}
+
 /* ────────────────────────────────────────────────────────────────────────────
    Base
    ──────────────────────────────────────────────────────────────────────── */
@@ -312,14 +318,286 @@ svg {
    ──────────────────────────────────────────────────────────────────────── */
 .reveal {
   opacity: 0;
-  transform: translateY(18px);
+  transform: translateY(22px) scale(0.985);
   transition:
-    opacity 0.65s ease,
-    transform 0.65s ease;
+    opacity 0.7s var(--ease-out-soft),
+    transform 0.7s var(--ease-out-soft);
+  will-change: opacity, transform;
 }
 .reveal-shown {
   opacity: 1;
   transform: none;
+}
+
+/* ────────────────────────────────────────────────────────────────────────────
+   Experience intro — the immersive opening + the choreographed hand-off
+   to the Hero. Everything keys off two classes set on <html>:
+     • js        — JavaScript is running (set by inline script in layout)
+     • pre-enter — the gate is up (scroll locked, chrome + hero held back)
+     • entered   — the visitor has stepped in (curtain lifts, content rises)
+   Without `js` (no-JS / script blocked) none of this applies, so the page is
+   a normal, fully-readable document.
+   ──────────────────────────────────────────────────────────────────────── */
+
+/* lock scrolling while the title screen is up */
+html.js.pre-enter,
+html.js.pre-enter body {
+  overflow: hidden;
+}
+
+/* the gate only exists in the JS experience */
+.intro-gate {
+  display: none;
+}
+html.js .intro-gate {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  cursor: pointer;
+  opacity: 1;
+  transition: opacity 0.85s var(--ease-out-soft);
+}
+/* lifting the curtain */
+html.entered .intro-gate {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* a soft vignette that lets the live sunset world show through */
+.intro-vignette {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(
+      120% 95% at 50% 38%,
+      rgba(13, 8, 4, 0) 26%,
+      rgba(13, 8, 4, 0.55) 70%,
+      rgba(11, 6, 3, 0.9) 100%
+    ),
+    linear-gradient(180deg, rgba(13, 8, 4, 0.45) 0%, rgba(13, 8, 4, 0.25) 100%);
+}
+
+.intro-content {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  text-align: center;
+}
+/* each piece of the title screen settles in on first paint */
+html.js .intro-gate[data-phase] .intro-content > * {
+  animation: introIn 0.7s var(--ease-out-soft) backwards;
+}
+.intro-emblem {
+  animation-delay: 0.05s !important;
+}
+.intro-kicker {
+  animation-delay: 0.2s !important;
+}
+.intro-brand {
+  animation-delay: 0.32s !important;
+}
+.intro-divider {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  animation-delay: 0.44s !important;
+}
+.intro-action {
+  min-height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 0.4rem;
+  animation-delay: 0.56s !important;
+}
+.intro-hint {
+  animation-delay: 0.7s !important;
+}
+
+@keyframes introIn {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.intro-loader {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.7rem;
+}
+.intro-bar {
+  position: relative;
+  display: block;
+  width: 220px;
+  max-width: 64vw;
+  height: 18px;
+  background: var(--color-wood-dark);
+  box-shadow:
+    inset 0 0 0 2px var(--color-outline),
+    inset 0 3px 0 rgba(0, 0, 0, 0.4);
+  overflow: hidden;
+}
+.intro-bar-fill {
+  display: block;
+  height: 100%;
+  width: 0;
+  background:
+    repeating-linear-gradient(
+      90deg,
+      rgba(0, 0, 0, 0.18) 0 2px,
+      transparent 2px 16px
+    ),
+    linear-gradient(180deg, #ffd166 0%, #f5b942 60%, #e89a2e 100%);
+  animation: barFill 1.55s var(--ease-in-out-soft) forwards;
+}
+@keyframes barFill {
+  0% {
+    width: 0;
+  }
+  100% {
+    width: 100%;
+  }
+}
+/* the Enter button: settle in, then breathe gently to invite the tap */
+.intro-enter {
+  animation:
+    introIn 0.5s var(--ease-out-soft) backwards,
+    floaty 5s ease-in-out 0.5s infinite;
+}
+
+/* the HUD glides down + the page-nav glides up, after the curtain lifts */
+.hud-shell,
+.pagenav-shell {
+  transition:
+    transform 0.8s var(--ease-out-soft),
+    opacity 0.8s ease;
+}
+html.js:not(.entered) .hud-shell {
+  transform: translateY(-130%);
+  opacity: 0;
+  pointer-events: none;
+}
+html.js:not(.entered) .pagenav-shell {
+  transform: translateY(130%);
+  opacity: 0;
+  pointer-events: none;
+}
+html.entered .hud-shell {
+  transition-delay: 0.15s;
+}
+html.entered .pagenav-shell {
+  transition-delay: 0.35s;
+}
+
+/* the Hero title block rises in, in sequence, once entered */
+.hero-rise {
+  opacity: 1;
+}
+html.js:not(.entered) .hero-rise {
+  opacity: 0;
+  transform: translateY(30px);
+}
+html.entered .hero-rise {
+  animation: heroRise 0.9s var(--ease-out-soft) backwards;
+  animation-delay: calc(0.35s + var(--rise-delay, 0ms));
+}
+@keyframes heroRise {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* drifting pixel embers in the hero */
+.ember {
+  position: absolute;
+  bottom: -8px;
+  border-radius: 1px;
+  opacity: 0;
+  filter: drop-shadow(0 0 4px rgba(255, 200, 110, 0.7));
+  animation-name: emberFloat;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+  will-change: transform, opacity;
+}
+@keyframes emberFloat {
+  0% {
+    transform: translateY(0) translateX(0) scale(0.8);
+    opacity: 0;
+  }
+  12% {
+    opacity: 0.95;
+  }
+  50% {
+    transform: translateY(-46vh) translateX(var(--drift, 12px)) scale(1);
+    opacity: 0.85;
+  }
+  82% {
+    opacity: 0.5;
+  }
+  100% {
+    transform: translateY(-92vh) translateX(0) scale(0.7);
+    opacity: 0;
+  }
+}
+
+/* the music toggle glides up after entering, like the rest of the chrome */
+.music-shell {
+  transition:
+    transform 0.8s var(--ease-out-soft) 0.5s,
+    opacity 0.8s ease 0.5s;
+}
+html.js:not(.entered) .music-shell {
+  transform: translateY(170%);
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* little "now playing" equalizer inside the music button */
+.eq {
+  display: flex;
+  align-items: flex-end;
+  gap: 2px;
+  height: 16px;
+}
+.eq > span {
+  width: 3px;
+  height: 100%;
+  background: currentColor;
+  transform-origin: bottom;
+  animation: eqBar 0.9s ease-in-out infinite;
+}
+.eq > span:nth-child(2) {
+  animation-delay: 0.25s;
+}
+.eq > span:nth-child(3) {
+  animation-delay: 0.45s;
+}
+@keyframes eqBar {
+  0%,
+  100% {
+    transform: scaleY(0.35);
+  }
+  50% {
+    transform: scaleY(1);
+  }
 }
 
 /* ────────────────────────────────────────────────────────────────────────────
@@ -506,5 +784,14 @@ button:focus-visible,
   .reveal {
     opacity: 1;
     transform: none;
+  }
+  /* no staggering for reduced motion — content appears at once on entry */
+  html.entered .hero-rise,
+  .intro-content > * {
+    animation-delay: 0s !important;
+  }
+  /* keep the equalizer bars steady rather than frozen mid-beat */
+  .eq > span {
+    transform: none !important;
   }
 }

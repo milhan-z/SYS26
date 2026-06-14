@@ -1,3 +1,5 @@
+import { IntroGate } from "@/components/IntroGate";
+import { BgmPlayer } from "@/components/BgmPlayer";
 import { Hud } from "@/components/Hud";
 import { PageNav } from "@/components/PageNav";
 import { Hero } from "@/components/sections/Hero";
@@ -9,8 +11,10 @@ import { Rsvp } from "@/components/sections/Rsvp";
 export default function InvitationPage() {
   return (
     <>
+      <IntroGate />
+      <BgmPlayer />
       <Hud />
-      <main>
+      <main id="main" tabIndex={-1} className="outline-none">
         <Hero />
         <Details />
         <Venue />

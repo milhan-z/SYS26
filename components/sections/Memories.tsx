@@ -29,7 +29,7 @@ export function Memories() {
           </p>
         </Reveal>
 
-        <Gallery items={site.memories.items} />
+        <Gallery albums={site.memories.albums} />
       </div>
     </section>
   );

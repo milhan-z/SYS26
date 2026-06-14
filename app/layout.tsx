@@ -44,8 +44,23 @@ export default function RootLayout({
   return (
     <html
       lang="en"
+      suppressHydrationWarning
       className={`${pixelify.variable} ${pressStart.variable} ${nunito.variable}`}
     >
+      <head>
+        {/*
+          Opt into the gated "intro" experience before first paint, so the page
+          opens on the title screen with no flash of the hero behind it. If this
+          script is blocked (or JS is off), `js`/`pre-enter` are never set and
+          the page renders as a normal, fully-readable, scrollable document.
+        */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html:
+              "document.documentElement.classList.add('js','pre-enter');",
+          }}
+        />
+      </head>
       <body className="antialiased">
         <noscript>
           {/* without JS, make scroll-reveal content visible immediately */}

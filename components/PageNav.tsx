@@ -50,13 +50,28 @@ export function PageNav() {
     [total],
   );
 
+  // ◄ / ► arrow keys flip between slides — but stay out of the way while the
+  // intro gate is up or a dialog (quest menu / photo lightbox) owns the keys.
+  // goTo scrolls; the IntersectionObserver above keeps `active` in sync.
+  useEffect(() => {
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key !== "ArrowRight" && event.key !== "ArrowLeft") return;
+      if (!document.documentElement.classList.contains("entered")) return;
+      if (document.querySelector('[role="dialog"]')) return;
+      event.preventDefault();
+      goTo(active + (event.key === "ArrowRight" ? 1 : -1));
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [active, goTo]);
+
   const isFirst = active === 0;
   const isLast = active === total - 1;
 
   return (
     <nav
       aria-label="Slide navigation"
-      className="pointer-events-none fixed inset-x-0 bottom-0 z-40 flex flex-col items-center gap-2 bg-gradient-to-t from-wood-deep/95 via-wood-deep/70 to-transparent px-4 pb-[max(0.75rem,env(safe-area-inset-bottom))] pt-7"
+      className="pagenav-shell pointer-events-none fixed inset-x-0 bottom-0 z-40 flex flex-col items-center gap-2 bg-gradient-to-t from-wood-deep/95 via-wood-deep/70 to-transparent px-4 pb-[max(0.75rem,env(safe-area-inset-bottom))] pt-7"
     >
       {/* arrows + counter */}
       <div className="pointer-events-auto pix bg-outline p-1">

@@ -9,7 +9,7 @@
  * ─────────────────────────────────────────────────────────────────────────────
  */
 
-export interface GalleryItem {
+export interface GalleryPhoto {
   /**
    * Path to a photo inside /public, e.g. "/images/gallery/01.jpg".
    * Leave as `null` to show a built-in pixel-art placeholder until the
@@ -18,8 +18,22 @@ export interface GalleryItem {
   src: string | null;
   /** Description of the photo for screen readers. */
   alt: string;
-  /** Short handwritten-style caption shown under the polaroid. */
-  caption: string;
+  /** Optional short caption shown under the photo in the viewer. */
+  caption?: string;
+}
+
+export interface MemoryAlbum {
+  /**
+   * The cover photo shown on the wall (the polaroid you tap). Leave `null`
+   * to show a built-in pixel-art placeholder.
+   */
+  cover: string | null;
+  /** The moment / category name — shown on the cover and as the album title. */
+  title: string;
+  /** Description of the cover for screen readers. */
+  alt: string;
+  /** Every photo that lives inside this moment (tap the cover to open them). */
+  photos: GalleryPhoto[];
 }
 
 export interface SiteConfig {
@@ -85,7 +99,7 @@ export interface SiteConfig {
     titleEn: string;
     introId: string;
     introEn: string;
-    items: GalleryItem[];
+    albums: MemoryAlbum[];
   };
   rsvp: {
     /** Big pixel word, e.g. "RSVP". */
@@ -101,6 +115,21 @@ export interface SiteConfig {
     /** Pretty version of the link shown in the copy box. */
     displayUrl: string;
     deadlineLabel: string;
+  };
+  /** Background music. Plays a seamless loop once the visitor taps "Enter". */
+  audio: {
+    /** Set `false` to disable music entirely. */
+    enabled: boolean;
+    /** Path to an audio file inside /public, e.g. "/audio/good-life.mp3". */
+    src: string;
+    /** Start of the loop, in seconds. */
+    loopStart: number;
+    /** End of the loop, in seconds (it jumps back to loopStart seamlessly). */
+    loopEnd: number;
+    /** Playback volume, 0–1. */
+    volume: number;
+    /** Accessible label for the mute/unmute control. */
+    label: string;
   };
   footer: {
     line: string;
@@ -167,38 +196,76 @@ export const site: SiteConfig = {
   memories: {
     titleId: "Kenangan",
     titleEn: "Memories",
-    introId: "Kenangan bersama",
-    introEn: "Moments we've shared",
-    items: [
+    introId: "Ketuk satu momen untuk membuka albumnya",
+    introEn: "Tap a moment to open its album",
+    // Each entry is a *moment* (a category). Its `cover` is the polaroid on the
+    // wall; tapping it opens every photo in `photos`. Drop real files into
+    // /public/images/gallery/ and point `cover`/`src` at them. Items left as
+    // `null` show a friendly pixel placeholder, so you can build albums while
+    // you're still collecting pictures.
+    albums: [
       {
-        src: null,
+        cover: null,
+        title: "Together, we shine!",
         alt: "The team smiling together after an international event",
-        caption: "Together, we shine!",
+        photos: [
+          { src: null, alt: "The whole team on stage", caption: "On stage together" },
+          { src: null, alt: "Group photo after the ceremony", caption: "After the ceremony" },
+          { src: null, alt: "Candid laughter backstage", caption: "Backstage laughs" },
+          { src: null, alt: "A toast to the team", caption: "Cheers to us" },
+        ],
       },
       {
-        src: null,
+        cover: null,
+        title: "Ideas. Impact. Us.",
         alt: "Brainstorming around a table full of sticky notes",
-        caption: "Ideas. Impact. Us.",
+        photos: [
+          { src: null, alt: "Whiteboard full of ideas", caption: "The big board" },
+          { src: null, alt: "Sticky notes everywhere", caption: "Every idea counts" },
+          { src: null, alt: "Deep in discussion", caption: "Heads together" },
+        ],
       },
       {
-        src: null,
+        cover: null,
+        title: "Celebrating every step",
         alt: "Celebrating a successful program with the whole crew",
-        caption: "Celebrating every step",
+        photos: [
+          { src: null, alt: "Confetti and cheers", caption: "We did it!" },
+          { src: null, alt: "Cutting the cake", caption: "Sweet success" },
+          { src: null, alt: "High fives all around", caption: "High fives" },
+          { src: null, alt: "Holding up the trophy", caption: "For the books" },
+        ],
       },
       {
-        src: null,
+        cover: null,
+        title: "Night talks, big dreams",
         alt: "Late-night conversations under lantern light",
-        caption: "Night talks, big dreams",
+        photos: [
+          { src: null, alt: "Lanterns glowing overhead", caption: "Under the lanterns" },
+          { src: null, alt: "Stories by the fire", caption: "Storytime" },
+          { src: null, alt: "Dreaming out loud", caption: "Big dreams" },
+        ],
       },
       {
-        src: null,
+        cover: null,
+        title: "Friendships that last",
         alt: "Friends gathered around a campfire",
-        caption: "Friendships that last",
+        photos: [
+          { src: null, alt: "Arms around shoulders", caption: "Side by side" },
+          { src: null, alt: "Inside jokes", caption: "Inside jokes" },
+          { src: null, alt: "One more group hug", caption: "Group hug" },
+          { src: null, alt: "Promising to keep in touch", caption: "See you soon" },
+        ],
       },
       {
-        src: null,
+        cover: null,
+        title: "Different paths, same purpose",
         alt: "The team in front of the ITS Global Engagement office",
-        caption: "Different paths, same purpose",
+        photos: [
+          { src: null, alt: "In front of the office", caption: "Where it began" },
+          { src: null, alt: "Everyone's next chapter", caption: "New chapters" },
+          { src: null, alt: "One last photo together", caption: "One last frame" },
+        ],
       },
     ],
   },
@@ -212,6 +279,15 @@ export const site: SiteConfig = {
     url: "https://its.ui.ac.id/rsvp/see-you-soon",
     displayUrl: "its.ui.ac.id/rsvp/see-you-soon",
     deadlineLabel: "Kindly respond by May 25, 2025",
+  },
+
+  audio: {
+    enabled: true,
+    src: "/audio/good-life.mp3",
+    loopStart: 47, // 00:47
+    loopEnd: 80, // 01:20
+    volume: 0.4,
+    label: "background music",
   },
 
   footer: {

@@ -24,8 +24,27 @@ No database, no CMS — all content lives in one editable file.
 | 5 | **RSVP** | Floating-lantern night sky, big "RSVP", green button + copy-able link |
 
 Navigation: scroll/swipe (the pages snap into view), the **◄ / ►** arrows
-and **N / 5** counter at the bottom, the progress **dots**, or the **Quest
-Log** menu (☰, top-right) to jump straight to any page.
+and **N / 5** counter at the bottom, the progress **dots**, the **← / →**
+keyboard keys, or the **Quest Log** menu (☰, top-right) to jump straight to
+any page.
+
+---
+
+## The opening (immersive intro)
+
+The site opens on a game-style **title screen** ([`components/IntroGate.tsx`](components/IntroGate.tsx)):
+a vignette over the *live* sunset world, a pixel "Loading world…" bar that
+fills, then a glowing **Tap to Enter** button. Tapping lifts the curtain and
+hands off to the hero — the title rises in, and the HUD + bottom nav glide
+into place.
+
+How it works: an inline script in [`app/layout.tsx`](app/layout.tsx) marks
+`<html class="js pre-enter">` before first paint (locking scroll and holding
+the content back); entering swaps it to `class="entered"`. All the
+choreography lives in [`app/globals.css`](app/globals.css) under
+**"Experience intro"**. To change the loading beat, edit the `1600` ms timeout
+in `IntroGate.tsx`. With JavaScript off the gate never appears and the page is
+a normal, fully-scrollable document.
 
 ---
 
@@ -86,26 +105,37 @@ While `image` is `null`, a built-in pixel illustration of the venue is shown.
 To use a real photo, drop it in `public/images/venue.jpg` and set
 `image: "/images/venue.jpg"`.
 
-### Memories (page 4)
+### Memories (page 4) — albums per moment
+
+Memories is now a wall of **albums**: each polaroid is one *moment* (a
+category), and tapping it opens every photo inside (tap a photo for full-size,
+then ◄ ► / swipe / arrow keys to browse, ✕ / Esc to step back out).
 
 1. Copy photos into `public/images/gallery/`, e.g. `01.jpg`, `02.jpg`, …
    (landscape around **1200×800 px** looks best; JPEG is fine — Next.js
    optimizes and lazy-loads them automatically).
-2. In `data/site.ts`, point each gallery item at its file:
+2. In `data/site.ts`, each entry under `memories.albums` is a moment. Set its
+   `cover` (the polaroid on the wall) and list its `photos`:
 
 ```ts
-items: [
+albums: [
   {
-    src: "/images/gallery/01.jpg",   // was null
+    cover: "/images/gallery/01.jpg",         // the polaroid on the wall (null = placeholder)
+    title: "Together, we shine!",            // the moment's name
     alt: "The team after Global Project Week 2025",
-    caption: "Together, we shine!",
+    photos: [
+      { src: "/images/gallery/01.jpg", alt: "On stage", caption: "On stage together" },
+      { src: "/images/gallery/02.jpg", alt: "Group shot", caption: "After the ceremony" },
+      // …add as many photos as you like; the grid adapts.
+    ],
   },
-  // …add or remove items freely; the grid adapts.
+  // …add or remove whole moments freely.
 ],
 ```
 
-Items with `src: null` show a friendly pixel placeholder, so you can mix real
-photos and placeholders while you collect pictures.
+Any `cover`/`src` left as `null` shows a friendly pixel placeholder, so you can
+build albums while you're still collecting pictures. The photo-count badge on
+each cover updates automatically.
 
 ### RSVP (page 5)
 
@@ -199,7 +229,8 @@ public/images/gallery/       ← drop real photos here
 - Gallery photos go through `next/image`: resized, converted to AVIF/WebP,
   and lazy-loaded automatically.
 - Pages use CSS scroll-snap; animations are transform/opacity only, and
-  **`prefers-reduced-motion` disables them** (content appears instantly).
+  **`prefers-reduced-motion` disables them** (content appears instantly, the
+  intro skips its loading bar, and the title screen reveals without motion).
 - Buttons and tap targets are ≥ 44 px, focus states are visible, images have
   alt text, the page counter/dots reflect the active slide, and the copy
   action announces success to screen readers.

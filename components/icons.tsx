@@ -367,6 +367,47 @@ export function CheckIcon(props: IconProps) {
   );
 }
 
+export function SoundOnIcon(props: IconProps) {
+  return (
+    <Px {...props}>
+      <g fill="currentColor">
+        {/* speaker box + cone */}
+        <rect x="1" y="6" width="3" height="4" />
+        <rect x="4" y="5" width="1" height="6" />
+        <rect x="5" y="4" width="1" height="8" />
+        <rect x="6" y="3" width="1" height="10" />
+        {/* sound waves */}
+        <rect x="9" y="6" width="1" height="4" />
+        <rect x="11" y="5" width="1" height="6" />
+        <rect x="13" y="3" width="1" height="10" />
+      </g>
+    </Px>
+  );
+}
+
+export function SoundOffIcon(props: IconProps) {
+  return (
+    <Px {...props}>
+      <g fill="currentColor">
+        {/* speaker box + cone */}
+        <rect x="1" y="6" width="3" height="4" />
+        <rect x="4" y="5" width="1" height="6" />
+        <rect x="5" y="4" width="1" height="8" />
+        <rect x="6" y="3" width="1" height="10" />
+        {/* a little "x" where the waves were */}
+        <rect x="10" y="6" width="1" height="1" />
+        <rect x="11" y="7" width="1" height="1" />
+        <rect x="12" y="8" width="1" height="1" />
+        <rect x="13" y="9" width="1" height="1" />
+        <rect x="13" y="6" width="1" height="1" />
+        <rect x="12" y="7" width="1" height="1" />
+        <rect x="11" y="8" width="1" height="1" />
+        <rect x="10" y="9" width="1" height="1" />
+      </g>
+    </Px>
+  );
+}
+
 export function BuildingIcon(props: IconProps) {
   return (
     <Px {...props}>
