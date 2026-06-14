@@ -58,7 +58,7 @@ export function Hero() {
         </div>
 
         <h1
-          className="hero-rise mt-6 text-balance font-pixel text-[3.4rem] font-bold leading-[0.95] text-cream text-pixel-shadow sm:text-7xl"
+          className="hero-rise mt-5 text-balance font-pixel text-[clamp(2.6rem,11vw,4.5rem)] font-bold leading-[0.95] text-cream text-pixel-shadow"
           style={{ "--rise-delay": "200ms" } as React.CSSProperties}
         >
           {site.hero.title}

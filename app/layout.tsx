@@ -57,7 +57,9 @@ export default function RootLayout({
         <script
           dangerouslySetInnerHTML={{
             __html:
-              "document.documentElement.classList.add('js','pre-enter');",
+              "document.documentElement.classList.add('js','pre-enter');" +
+              // every fresh open / reload starts from the landing, at the top
+              "if('scrollRestoration' in history){history.scrollRestoration='manual';}",
           }}
         />
       </head>

@@ -35,9 +35,9 @@ export function Hud() {
 
   return (
     <>
-      <header className="hud-shell fixed inset-x-0 top-0 z-40 px-2 pt-2 sm:px-3 sm:pt-3">
+      <header className="hud-shell fixed inset-x-0 top-0 z-40 px-2 pt-[max(0.5rem,env(safe-area-inset-top))] sm:px-3">
         <div className="pix mx-auto max-w-3xl bg-outline/90 p-1 backdrop-blur-[2px]">
-          <div className="pix panel-wood flex items-center justify-between gap-3 px-2.5 py-2 sm:px-3">
+          <div className="pix panel-wood flex items-center justify-between gap-3 px-2.5 py-1.5 sm:px-3">
             <a
               href="#invitation"
               className="flex min-h-11 items-center gap-2.5"

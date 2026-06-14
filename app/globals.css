@@ -108,9 +108,22 @@ svg {
   justify-content: center;
   width: 100%;
   margin-inline: auto;
-  padding-top: 4.25rem;
-  padding-bottom: 6.5rem;
+  /* clear the fixed HUD (top) and page-nav (bottom), plus device safe areas */
+  padding-top: calc(env(safe-area-inset-top) + 5rem);
+  padding-bottom: calc(env(safe-area-inset-bottom) + 7.75rem);
   padding-inline: 1.1rem;
+}
+
+/* tighten the framing on short viewports so nothing crowds or clips */
+@media (max-height: 740px) {
+  .slide-body {
+    padding-top: calc(env(safe-area-inset-top) + 4.75rem);
+    padding-bottom: calc(env(safe-area-inset-bottom) + 6.25rem);
+  }
+  /* drop purely-decorative repeats (the recurring title echo, scroll hint) */
+  .hide-on-short {
+    display: none !important;
+  }
 }
 
 /* darkening wash so text stays legible over the painted scenes */
@@ -356,8 +369,7 @@ html.js .intro-gate {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 1.5rem;
-  cursor: pointer;
+  overflow-y: auto; /* scroll on very short screens rather than clip */
   opacity: 1;
   transition: opacity 0.85s var(--ease-out-soft);
 }
@@ -367,18 +379,16 @@ html.entered .intro-gate {
   pointer-events: none;
 }
 
-/* a soft vignette that lets the live sunset world show through */
-.intro-vignette {
+/* a gentle scrim over the opaque backdrop so the text stays legible */
+.intro-scrim {
   position: absolute;
   inset: 0;
-  background:
-    radial-gradient(
-      120% 95% at 50% 38%,
-      rgba(13, 8, 4, 0) 26%,
-      rgba(13, 8, 4, 0.55) 70%,
-      rgba(11, 6, 3, 0.9) 100%
-    ),
-    linear-gradient(180deg, rgba(13, 8, 4, 0.45) 0%, rgba(13, 8, 4, 0.25) 100%);
+  background: radial-gradient(
+    125% 85% at 50% 42%,
+    rgba(8, 5, 12, 0) 30%,
+    rgba(8, 5, 12, 0.5) 100%
+  );
+  pointer-events: none;
 }
 
 .intro-content {
@@ -387,8 +397,19 @@ html.entered .intro-gate {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 1rem;
+  gap: clamp(0.7rem, 3.5vw, 1.1rem);
   text-align: center;
+  width: 100%;
+  max-width: 28rem;
+  margin: auto;
+  padding: calc(env(safe-area-inset-top) + 2rem) 1.5rem
+    calc(env(safe-area-inset-bottom) + 2rem);
+}
+.intro-kicker {
+  font-size: clamp(0.55rem, 2.6vw, 0.66rem);
+}
+.intro-brand {
+  font-size: clamp(1.45rem, 6.5vw, 2rem);
 }
 /* each piece of the title screen settles in on first paint */
 html.js .intro-gate[data-phase] .intro-content > * {

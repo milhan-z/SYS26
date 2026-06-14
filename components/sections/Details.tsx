@@ -48,7 +48,7 @@ export function Details() {
       <div className="scene-scrim" />
 
       <div className="slide-body max-w-xl gap-3.5">
-        <TitleBanner showKicker={false} compact />
+        <TitleBanner showKicker={false} compact className="hide-on-short" />
 
         <Reveal className="flex flex-col items-center gap-2 text-center">
           <div className="pix -rotate-1 bg-outline p-1">

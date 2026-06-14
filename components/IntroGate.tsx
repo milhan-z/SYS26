@@ -2,42 +2,39 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { site } from "@/data/site";
+import { NightScene } from "@/components/scene/NightScene";
 import { Emblem, ChevronRightIcon, HeartIcon } from "@/components/icons";
 
 type Phase = "loading" | "ready" | "leaving";
 
 /**
- * The immersive opening — a game-style "title screen" painted over the live
- * sunset world (the Hero's scene shows through the vignette). A pixel
- * "Loading world…" bar fills, then becomes a pulsing "Tap to Enter" button.
+ * The landing screen — a clean, fully opaque title page with its own starry
+ * backdrop (it does NOT show the hero through it, so it stays tidy on every
+ * phone). A pixel "Loading world…" bar fills, then an "Open Invitation" button
+ * appears. Pressing it starts the music (must be inside this tap — autoplay
+ * rules) and lifts the curtain to reveal the hero.
  *
- * Entering lifts the vignette and hands off to the Hero: it toggles
- * `<html class="entered">`, which CSS uses to choreograph the title reveal and
- * glide the HUD + page-nav into place (see globals.css → "Experience intro").
- *
- * The whole experience is opt-in on `<html class="js pre-enter">` (set by an
- * inline script in layout.tsx), so without JavaScript the gate never shows and
- * the page is fully readable and scrollable.
+ * Gated on `<html class="js pre-enter">` (set pre-paint in layout.tsx); without
+ * JavaScript the landing never shows and the page is a normal document.
  */
 export function IntroGate() {
   const [phase, setPhase] = useState<Phase>("loading");
   const [mounted, setMounted] = useState(true);
   const [reduced, setReduced] = useState(false);
-  const rootRef = useRef<HTMLDivElement>(null);
   const enteredRef = useRef(false);
 
-  // Decide the opening beat: a short "loading" pause for the scene to breathe,
-  // or — for reduced-motion — skip straight to the Enter prompt.
   useEffect(() => {
     const prefersReduced = window.matchMedia(
       "(prefers-reduced-motion: reduce)",
     ).matches;
     setReduced(prefersReduced);
+    // a fresh open / reload always begins at the top of the landing
+    window.scrollTo(0, 0);
     if (prefersReduced) {
       setPhase("ready");
       return;
     }
-    const t = setTimeout(() => setPhase("ready"), 1600);
+    const t = setTimeout(() => setPhase("ready"), 1500);
     return () => clearTimeout(t);
   }, []);
 
@@ -49,15 +46,14 @@ export function IntroGate() {
     window.dispatchEvent(new CustomEvent("sys:enter"));
 
     const root = document.documentElement;
+    window.scrollTo(0, 0);
     root.classList.remove("pre-enter");
     root.classList.add("entered");
     setPhase("leaving");
 
-    // hand keyboard focus to the content once the curtain lifts
     window.setTimeout(() => {
       document.getElementById("main")?.focus?.();
     }, 60);
-    // unmount after the fade so it leaves nothing behind
     window.setTimeout(() => setMounted(false), reduced ? 0 : 900);
   }, [reduced]);
 
@@ -78,29 +74,28 @@ export function IntroGate() {
 
   return (
     <div
-      ref={rootRef}
       className="intro-gate"
       data-phase={phase}
       role="dialog"
       aria-modal="true"
       aria-label={`Welcome — ${site.hero.title}`}
-      onClick={enter}
     >
-      <div className="intro-vignette" aria-hidden="true" />
+      {/* opaque, self-contained backdrop */}
+      <NightScene />
+      <div className="intro-scrim" aria-hidden="true" />
 
       <div className="intro-content">
-        {/* framed emblem */}
         <span className="intro-emblem pix bg-outline/80 p-1.5">
           <span className="pix block bg-wood p-2">
-            <Emblem size={46} />
+            <Emblem size={42} />
           </span>
         </span>
 
-        <p className="intro-kicker pix-sm panel-parchment px-4 py-1.5 font-arcade text-[0.55rem] text-ink sm:text-[0.62rem]">
+        <p className="intro-kicker pix-sm panel-parchment px-4 py-1.5 font-arcade text-ink">
           {site.hero.kicker}
         </p>
 
-        <p className="intro-brand font-pixel text-2xl font-semibold text-glow text-pixel-shadow-sm sm:text-3xl">
+        <p className="intro-brand font-pixel font-semibold text-glow text-pixel-shadow-sm">
           {site.brand.name}
         </p>
 
@@ -110,7 +105,6 @@ export function IntroGate() {
           <span className="pixel-rule w-10 text-cream/80" />
         </span>
 
-        {/* loading bar → enter prompt */}
         <div className="intro-action">
           {phase === "loading" && !reduced ? (
             <div className="intro-loader" aria-live="polite">
@@ -125,22 +119,19 @@ export function IntroGate() {
             <button
               type="button"
               autoFocus
-              onClick={(e) => {
-                e.stopPropagation();
-                enter();
-              }}
+              onClick={enter}
               className="intro-enter pixel-btn pix pixel-btn--amber"
             >
               <span className="pixel-btn-face pix-sm" aria-hidden="true" />
               <span className="pixel-btn-label">
-                Tap to Enter <ChevronRightIcon size={14} />
+                Open Invitation <ChevronRightIcon size={14} />
               </span>
             </button>
           )}
         </div>
 
         <p className="intro-hint font-arcade text-[0.46rem] tracking-wide text-cream/55">
-          an invitation awaits
+          tap to begin · with sound ♪
         </p>
       </div>
     </div>

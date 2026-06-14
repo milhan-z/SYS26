@@ -71,7 +71,7 @@ export function PageNav() {
   return (
     <nav
       aria-label="Slide navigation"
-      className="pagenav-shell pointer-events-none fixed inset-x-0 bottom-0 z-40 flex flex-col items-center gap-2 bg-gradient-to-t from-wood-deep/95 via-wood-deep/70 to-transparent px-4 pb-[max(0.75rem,env(safe-area-inset-bottom))] pt-7"
+      className="pagenav-shell pointer-events-none fixed inset-x-0 bottom-0 z-40 flex flex-col items-center gap-1.5 bg-gradient-to-t from-wood-deep/95 via-wood-deep/70 to-transparent px-4 pb-[max(0.6rem,env(safe-area-inset-bottom))] pt-4"
     >
       {/* arrows + counter */}
       <div className="pointer-events-auto pix bg-outline p-1">
@@ -117,7 +117,7 @@ export function PageNav() {
       </ol>
 
       {/* scroll hint / final marker */}
-      <p className="flex items-center gap-1.5 font-arcade text-[0.5rem] text-cream/85 text-pixel-shadow-sm">
+      <p className="hide-on-short flex items-center gap-1.5 font-arcade text-[0.5rem] text-cream/85 text-pixel-shadow-sm">
         {isLast ? (
           <span>
             page {total} of {total}

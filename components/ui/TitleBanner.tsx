@@ -30,8 +30,8 @@ export function TitleBanner({
         className={cn(
           "font-pixel font-bold leading-[0.9] text-cream text-pixel-shadow",
           compact
-            ? "mt-2 text-[2rem] sm:text-4xl"
-            : "mt-3 text-[2.7rem] sm:text-6xl",
+            ? "mt-2 text-[clamp(1.6rem,7vw,2.25rem)]"
+            : "mt-3 text-[clamp(2.1rem,9vw,3.75rem)]",
         )}
       >
         {site.hero.title}
@@ -42,7 +42,9 @@ export function TitleBanner({
       <p
         className={cn(
           "font-pixel font-semibold text-glow text-pixel-shadow-sm",
-          compact ? "mt-1.5 text-lg sm:text-2xl" : "mt-2 text-xl sm:text-3xl",
+          compact
+            ? "mt-1.5 text-[clamp(0.95rem,4vw,1.5rem)]"
+            : "mt-2 text-[clamp(1.1rem,4.5vw,1.875rem)]",
         )}
       >
         {site.hero.subtitle}

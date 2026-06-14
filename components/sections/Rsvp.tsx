@@ -23,7 +23,7 @@ export function Rsvp() {
       <div className="scene-scrim" />
 
       <div className="slide-body max-w-md gap-4">
-        <TitleBanner showKicker={false} />
+        <TitleBanner showKicker={false} className="hide-on-short" />
 
         {/* big RSVP word with little sprigs */}
         <Reveal className="flex flex-col items-center">
@@ -31,7 +31,7 @@ export function Rsvp() {
             <SparkleIcon size={20} className="text-leaf" />
             <h3
               id="rsvp-heading"
-              className="font-pixel text-6xl font-bold leading-none text-cream text-pixel-shadow sm:text-7xl"
+              className="font-pixel text-[clamp(3rem,15vw,5rem)] font-bold leading-none text-cream text-pixel-shadow"
             >
               {site.rsvp.heading}
             </h3>

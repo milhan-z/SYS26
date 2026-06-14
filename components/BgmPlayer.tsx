@@ -92,12 +92,12 @@ export function BgmPlayer() {
     sourceRef.current = src;
     setPlaying(true);
 
-    // gentle fade-in (exponential ramps can't hit 0, so use a tiny floor)
+    // quick fade-in so the music starts right as the invitation opens
     const target = mutedRef.current ? 0.0001 : Math.max(cfg.volume, 0.0001);
     const now = ctx.currentTime;
     gain.gain.cancelScheduledValues(now);
     gain.gain.setValueAtTime(0.0001, now);
-    gain.gain.exponentialRampToValueAtTime(target, now + 1.6);
+    gain.gain.exponentialRampToValueAtTime(target, now + 0.6);
   }, [cfg.loopStart, cfg.loopEnd, cfg.volume]);
 
   // call the latest tryStart from listeners without re-binding them

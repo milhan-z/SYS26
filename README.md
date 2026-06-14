@@ -32,19 +32,42 @@ any page.
 
 ## The opening (immersive intro)
 
-The site opens on a game-style **title screen** ([`components/IntroGate.tsx`](components/IntroGate.tsx)):
-a vignette over the *live* sunset world, a pixel "Loading world…" bar that
-fills, then a glowing **Tap to Enter** button. Tapping lifts the curtain and
-hands off to the hero — the title rises in, and the HUD + bottom nav glide
-into place.
+Every fresh open / reload starts on a clean, full-screen **landing page**
+([`components/IntroGate.tsx`](components/IntroGate.tsx)): a self-contained
+starry night scene, the emblem, a pixel "Loading world…" bar that fills, then a
+glowing **Open Invitation** button. Pressing it starts the music and lifts the
+curtain to the hero — the title rises in, and the HUD + bottom nav glide into
+place.
 
 How it works: an inline script in [`app/layout.tsx`](app/layout.tsx) marks
-`<html class="js pre-enter">` before first paint (locking scroll and holding
-the content back); entering swaps it to `class="entered"`. All the
-choreography lives in [`app/globals.css`](app/globals.css) under
-**"Experience intro"**. To change the loading beat, edit the `1600` ms timeout
-in `IntroGate.tsx`. With JavaScript off the gate never appears and the page is
-a normal, fully-scrollable document.
+`<html class="js pre-enter">` before first paint (locking scroll, resetting to
+the top, and holding the content back); entering swaps it to `class="entered"`.
+All the choreography lives in [`app/globals.css`](app/globals.css) under
+**"Experience intro"**. To change the loading beat, edit the `1500` ms timeout
+in `IntroGate.tsx`. With JavaScript off the landing never appears and the page
+is a normal, fully-scrollable document.
+
+### Background music
+
+A track loops seamlessly once the visitor presses **Open Invitation** (browsers
+block audio until a tap, so it begins on that gesture). A floating pixel button
+(bottom-left) mutes/unmutes it. It uses the Web Audio API with sample-accurate
+`loopStart`/`loopEnd`, so a sub-section of a song repeats with no gap. Configure
+it in [`data/site.ts`](data/site.ts) → `audio`:
+
+```ts
+audio: {
+  enabled: true,                 // set false to remove music entirely
+  src: "/audio/good-life.mp3",   // a file inside /public
+  loopStart: 47,                 // 00:47 — start of the loop, in seconds
+  loopEnd: 80,                   // 01:20 — jumps back to loopStart seamlessly
+  volume: 0.4,                   // 0–1
+  label: "background music",     // for the mute button's screen-reader label
+},
+```
+
+To use a different song, drop the file in `public/audio/` and update `src`
+(plus `loopStart`/`loopEnd` for the section you want).
 
 ---
 

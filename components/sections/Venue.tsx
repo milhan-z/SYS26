@@ -20,7 +20,7 @@ export function Venue() {
       <div className="scene-scrim" />
 
       <div className="slide-body max-w-2xl gap-2.5">
-        <TitleBanner compact />
+        <TitleBanner compact className="hide-on-short" />
 
         {/* "Venue" wooden banner */}
         <Reveal className="flex justify-center">
