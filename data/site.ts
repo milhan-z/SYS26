@@ -271,10 +271,9 @@ export const site: SiteConfig = {
     message: "Let us know if you're joining!",
     buttonLabel: "Yes, I'll be there",
     buttonSub: "Open RSVP Link",
-    // ⬇️ Replace with your real Google Form / Typeform / RSVP link.
-    url: "https://its.ui.ac.id/rsvp/see-you-soon",
-    displayUrl: "its.ui.ac.id/rsvp/see-you-soon",
-    deadlineLabel: "Please let us know by May 25, 2025",
+    url: "https://its.id/m/RSVPSYSSpring2026",
+    displayUrl: "its.id/m/RSVPSYSSpring2026",
+    deadlineLabel: "Please let us know by June 18, 2026",
   },
 
   audio: {
