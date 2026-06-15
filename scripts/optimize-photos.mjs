@@ -26,10 +26,71 @@ const ALBUMS = [
   { dir: "guf", slug: "guf", title: "GUF" },
   { dir: "jcc", slug: "jcc", title: "JCC" },
   { dir: "sports day", slug: "sports-day", title: "Sports Day" },
-  { dir: "bromo", slug: "bromo", title: "Bromo Trip" },
+  { dir: "Bromo Adventurous Trip", slug: "bromo", title: "Bromo Adventurous Trip" },
 ];
 
 const DECODABLE = /\.(jpe?g|png|webp|heic|heif|tiff?)$/i;
+
+/**
+ * The caption IS the filename (the user names each photo). Drop the extension,
+ * trim stray spaces, and recover punctuation the filesystem can't store:
+ * `_` between letters → apostrophe ("Ain_t" → "Ain't"); any leftover `_` → "?"
+ * ("Volcano Who_" → "Volcano Who?").
+ */
+function captionFromFilename(file) {
+  return file
+    .replace(/\.[^.]+$/, "")
+    .trim()
+    .replace(/([A-Za-z])_([A-Za-z])/g, "$1'$2")
+    .replace(/_/g, "?")
+    .replace(/\s+/g, " ");
+}
+
+const esc = (s) => s.replace(/\\/g, "\\\\").replace(/"/g, '\\"');
+
+/** Pull every embedded JPEG stream (FFD8…FFD9) out of a buffer. */
+function extractJpegs(buf) {
+  const out = [];
+  let i = 0;
+  while (i < buf.length - 3) {
+    if (buf[i] === 0xff && buf[i + 1] === 0xd8 && buf[i + 2] === 0xff) {
+      let j = i + 2;
+      while (j < buf.length - 1 && !(buf[j] === 0xff && buf[j + 1] === 0xd9)) j++;
+      if (j < buf.length - 1) {
+        out.push(buf.subarray(i, j + 2));
+        i = j + 2;
+        continue;
+      }
+    }
+    i++;
+  }
+  return out;
+}
+
+/**
+ * Return something sharp can decode: the file itself if it's a real image, else
+ * the largest embedded JPEG preview (recovers Sony .ARW RAW files that were
+ * renamed to .jpg — they carry a full 1920px preview inside).
+ */
+async function decodableInput(srcPath) {
+  try {
+    await sharp(srcPath).metadata();
+    return srcPath;
+  } catch {
+    /* not a format sharp reads directly — try an embedded preview */
+  }
+  const buf = await fs.readFile(srcPath);
+  const jpegs = extractJpegs(buf).sort((a, b) => b.length - a.length);
+  for (const j of jpegs) {
+    try {
+      await sharp(j).metadata();
+      return j;
+    } catch {
+      /* keep looking */
+    }
+  }
+  return null;
+}
 
 async function run() {
   const manifest = [];
@@ -56,13 +117,15 @@ async function run() {
       const outName = String(n).padStart(2, "0") + ".jpg";
       const outPath = path.join(outDir, outName);
       try {
-        const info = await sharp(src)
+        const input = await decodableInput(src);
+        if (!input) throw new Error("no decodable image (RAW/HEIC without preview)");
+        const info = await sharp(input)
           .rotate() // apply EXIF orientation
           .resize(MAX_EDGE, MAX_EDGE, { fit: "inside", withoutEnlargement: true })
           .jpeg({ quality: QUALITY, mozjpeg: true })
           .toFile(outPath);
         const publicPath = `/images/gallery/${album.slug}/${outName}`;
-        photos.push(publicPath);
+        photos.push({ src: publicPath, caption: captionFromFilename(file) });
 
         // tiny blurred preview (base64) for next/image placeholder="blur"
         const tiny = await sharp(outPath)
@@ -84,19 +147,19 @@ async function run() {
     console.log(`✓ ${album.title}: ${photos.length} photos\n`);
   }
 
-  // emit a ready-to-paste albums array for data/site.ts
+  // emit a ready-to-paste albums array for data/site.ts (matches its indentation)
   const out = manifest
     .map((a) => {
       const photoLines = a.photos
         .map(
-          (src, i) =>
-            `        { src: "${src}", alt: "${a.title} — photo ${i + 1}" },`,
+          (p) =>
+            `          { src: "${p.src}", alt: "${esc(`${a.title} — ${p.caption}`)}", caption: "${esc(p.caption)}" },`,
         )
         .join("\n");
       return `      {
-        cover: "${a.photos[0] ?? null}",
-        title: "${a.title}",
-        alt: "${a.title}",
+        cover: "${a.photos[0]?.src ?? null}",
+        title: "${esc(a.title)}",
+        alt: "${esc(a.title)} moments",
         photos: [
 ${photoLines}
         ],
