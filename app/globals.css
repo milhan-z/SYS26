@@ -450,6 +450,16 @@ html.js.pre-enter body {
   overflow: hidden;
 }
 
+/* While the landing is up it fully covers the page, so every animation inside
+   <main> (the hero's whole lantern scene + the lower slides) is wasted work at
+   the most load-critical moment. Pause them until the visitor enters — the
+   landing has its own copy of the scene running. They resume on `entered`. */
+html.js.pre-enter main *,
+html.js.pre-enter main *::before,
+html.js.pre-enter main *::after {
+  animation-play-state: paused !important;
+}
+
 /* the gate only exists in the JS experience */
 .intro-gate {
   display: none;

@@ -11,12 +11,16 @@
 let locks = 0;
 let prevHtml = "";
 let prevBody = "";
+let savedScrollY = 0;
 
 export function lockScroll() {
   if (typeof document === "undefined") return;
   if (locks === 0) {
     const html = document.documentElement;
     const body = document.body;
+    // capture BEFORE hiding overflow — setting overflow:hidden on the root
+    // scroller resets the scroll offset to 0, so we restore it on unlock
+    savedScrollY = window.scrollY;
     prevHtml = html.style.overflow;
     prevBody = body.style.overflow;
     html.style.overflow = "hidden";
@@ -31,5 +35,7 @@ export function unlockScroll() {
   if (locks === 0) {
     document.documentElement.style.overflow = prevHtml;
     document.body.style.overflow = prevBody;
+    // put the page back exactly where it was before we locked it
+    window.scrollTo(0, savedScrollY);
   }
 }

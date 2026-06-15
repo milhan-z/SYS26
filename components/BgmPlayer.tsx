@@ -51,7 +51,9 @@ export function BgmPlayer() {
     let cancelled = false;
     (async () => {
       try {
-        const res = await fetch(cfg.src);
+        // low priority so it never steals bandwidth from images/fonts on the
+        // first paint; it only needs to be ready by the time they tap "enter"
+        const res = await fetch(cfg.src, { priority: "low" });
         const arr = await res.arrayBuffer();
         const buf = await ctx.decodeAudioData(arr);
         if (cancelled) return;

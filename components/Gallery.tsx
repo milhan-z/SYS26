@@ -7,6 +7,15 @@ import type { MemoryAlbum, GalleryPhoto } from "@/data/site";
 import { MemoryPlaceholder } from "@/components/scene/MemoryPlaceholder";
 import { Reveal } from "@/components/ui/Reveal";
 import { lockScroll, unlockScroll } from "@/lib/scrollLock";
+import { blurData } from "@/data/blurData";
+
+/** Smooth fade-in: a tiny base64 preview while the real photo loads. */
+function blurProps(src: string) {
+  const blurDataURL = blurData[src];
+  return blurDataURL
+    ? ({ placeholder: "blur", blurDataURL } as const)
+    : ({ placeholder: "empty" } as const);
+}
 import {
   CameraIcon,
   ChevronLeftIcon,
@@ -62,6 +71,7 @@ function AlbumCover({
                   fill
                   sizes="(min-width: 1024px) 30vw, (min-width: 640px) 45vw, 92vw"
                   className="object-cover"
+                  {...blurProps(album.cover)}
                 />
               ) : (
                 <MemoryPlaceholder seed={index} />
@@ -113,6 +123,7 @@ function PhotoThumb({
                 fill
                 sizes="(min-width: 1024px) 30vw, (min-width: 640px) 45vw, 92vw"
                 className="object-cover"
+                {...blurProps(photo.src)}
               />
             ) : (
               <MemoryPlaceholder seed={albumIndex * 3 + index} />
@@ -303,6 +314,7 @@ export function Gallery({ albums }: { albums: MemoryAlbum[] }) {
                     fill
                     sizes="(min-width: 640px) 512px, 92vw"
                     className="object-cover"
+                    {...blurProps(photo.src)}
                   />
                 ) : (
                   <MemoryPlaceholder seed={(albumIndex as number) * 3 + photoIndex} />
