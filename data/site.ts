@@ -87,6 +87,8 @@ export interface SiteConfig {
     mapLabel: string;
     /** Full Google Maps link opened by the "View Map" button. */
     mapsUrl: string;
+    /** Google Maps "embed" URL (Share → Embed a map → src) shown inline. */
+    mapEmbedUrl: string;
     /**
      * Optional venue photo, e.g. "/images/venue.jpg".
      * Keep `null` to show the built-in pixel illustration of the venue.
@@ -183,9 +185,11 @@ export const site: SiteConfig = {
       "Kampus ITS, Sukolilo",
       "Surabaya, Jawa Timur 60111",
     ],
-    mapLabel: "Teknik Industri ITS",
+    mapLabel: "Teknik Sistem dan Industri ITS",
     mapsUrl:
-      "https://www.google.com/maps/search/?api=1&query=Departemen+Teknik+Industri+ITS+Sukolilo+Surabaya",
+      "https://www.google.com/maps/search/?api=1&query=Departemen+Teknik+Sistem+dan+Industri+ITS+Sukolilo+Surabaya",
+    mapEmbedUrl:
+      "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1190.9395010560552!2d112.79561090650165!3d-7.283135925414023!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2dd7fa12b7225b9b%3A0x919b4db9ad1f1c70!2sDepartemen%20Teknik%20Sistem%20dan%20Industri!5e1!3m2!1sen!2sid!4v1781513744797!5m2!1sen!2sid",
     image: null,
     imageAlt: "Industrial Engineering building at ITS",
   },

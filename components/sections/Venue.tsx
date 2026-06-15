@@ -1,8 +1,5 @@
-import Image from "next/image";
 import { site } from "@/data/site";
 import { SkyBackdrop } from "@/components/scene/SkyBackdrop";
-import { VenueArt } from "@/components/scene/VenueArt";
-import { MapThumb } from "@/components/scene/MapThumb";
 import { TitleBanner } from "@/components/ui/TitleBanner";
 import { PixelPanel } from "@/components/ui/PixelPanel";
 import { PixelButton } from "@/components/ui/PixelButton";
@@ -10,8 +7,9 @@ import { Reveal } from "@/components/ui/Reveal";
 import { BuildingIcon, MapIcon, PinIcon } from "@/components/icons";
 
 /**
- * Chapter 3 — the venue: address, a pixel illustration, and a mini-map.
- * Swap in a real photo via data/site.ts → venue.image.
+ * Chapter 3 — the venue: a live embedded Google Map of the place, plus the
+ * address and a "View Map" button. Swap the map via data/site.ts →
+ * venue.mapEmbedUrl (Google Maps → Share → Embed a map → the src URL).
  */
 export function Venue() {
   return (
@@ -34,56 +32,50 @@ export function Venue() {
           </div>
         </Reveal>
 
-        {/* venue illustration / photo */}
+        {/* live, embedded map of the venue */}
         <Reveal>
           <PixelPanel as="figure" innerClassName="p-1.5">
-            <div className="relative aspect-[16/7] overflow-hidden bg-wood-dark">
-              {site.venue.image ? (
-                <Image
-                  src={site.venue.image}
-                  alt={site.venue.imageAlt}
-                  fill
-                  sizes="(min-width: 768px) 672px, 94vw"
-                  className="object-cover"
-                />
-              ) : (
-                <VenueArt />
-              )}
+            <div className="relative aspect-[16/10] overflow-hidden bg-wood-dark">
+              <iframe
+                src={site.venue.mapEmbedUrl}
+                title={`Map to ${site.venue.name} — ${site.venue.mapLabel}`}
+                className="absolute inset-0 h-full w-full"
+                style={{ border: 0 }}
+                loading="lazy"
+                allowFullScreen
+                referrerPolicy="no-referrer-when-downgrade"
+              />
             </div>
           </PixelPanel>
         </Reveal>
 
-        {/* address + mini-map, side by side */}
+        {/* address + open-in-maps button */}
         <Reveal delay={100}>
-          <div className="grid grid-cols-[1.25fr_1fr] gap-3">
-            <PixelPanel innerClassName="flex flex-col p-3.5">
-              <h3 className="flex items-center gap-2 font-pixel text-xl font-bold text-glow">
-                <BuildingIcon size={20} className="shrink-0 text-gold" />
-                {site.venue.name}
-              </h3>
-              <div className="pixel-rule mt-2 text-cream" aria-hidden="true" />
-              <address className="mt-2.5 flex items-start gap-2 not-italic">
-                <PinIcon size={16} className="mt-0.5 shrink-0" />
-                <p className="font-body text-[0.82rem] leading-snug text-cream/90">
-                  {site.venue.addressLines.map((line) => (
-                    <span key={line} className="block">
-                      {line}
-                    </span>
-                  ))}
-                </p>
-              </address>
-              <PixelButton
-                href={site.venue.mapsUrl}
-                external
-                variant="green"
-                className="mt-3.5 w-full"
-              >
-                <MapIcon size={15} /> View Map
-              </PixelButton>
-            </PixelPanel>
-
-            <MapThumb />
-          </div>
+          <PixelPanel innerClassName="flex flex-col p-3.5">
+            <h3 className="flex items-center gap-2 font-pixel text-xl font-bold text-glow">
+              <BuildingIcon size={20} className="shrink-0 text-gold" />
+              {site.venue.name}
+            </h3>
+            <div className="pixel-rule mt-2 text-cream" aria-hidden="true" />
+            <address className="mt-2.5 flex items-start gap-2 not-italic">
+              <PinIcon size={16} className="mt-0.5 shrink-0" />
+              <p className="font-body text-[0.82rem] leading-snug text-cream/90">
+                {site.venue.addressLines.map((line) => (
+                  <span key={line} className="block">
+                    {line}
+                  </span>
+                ))}
+              </p>
+            </address>
+            <PixelButton
+              href={site.venue.mapsUrl}
+              external
+              variant="green"
+              className="mt-3.5 w-full"
+            >
+              <MapIcon size={15} /> View Map
+            </PixelButton>
+          </PixelPanel>
         </Reveal>
       </div>
     </section>
