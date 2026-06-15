@@ -151,7 +151,7 @@ export const site: SiteConfig = {
     kicker: "you're invited to...",
     title: "See You Soon",
     subtitle: "ITS Global Engagement",
-    sign: ["Good people", "Work that matters", "See you soon"],
+    sign: ["See you", "in another", "server!"],
     scrollHint: "scroll to continue",
     backgroundImage: null,
   },
@@ -163,13 +163,13 @@ export const site: SiteConfig = {
 
   event: {
     title: "See You Soon — ITS Global Engagement",
-    dateLabel: "Saturday, 21 June 2025",
-    timeLabel: "10:00 AM – 3:00 PM",
-    start: "2025-06-21T10:00:00+07:00",
-    end: "2025-06-21T15:00:00+07:00",
+    dateLabel: "Saturday, 20 June 2026",
+    timeLabel: "3:30 PM – 9:00 PM",
+    start: "2026-06-20T15:30:00+07:00",
+    end: "2026-06-20T21:00:00+07:00",
     dresscode: {
-      main: "Smart Casual",
-      hint: "a touch of green is encouraged",
+      main: "Earth Tone",
+      hint: "warm browns, greens & neutrals",
     },
     note: "More location details will be shared closer to the event.",
   },
