@@ -41,14 +41,14 @@ export function Venue() {
         {/* venue photo */}
         <Reveal>
           <PixelPanel as="figure" innerClassName="p-1.5">
-            <div className="relative w-full overflow-hidden bg-wood-dark" style={{ height: "clamp(160px, 38vh, 320px)" }}>
+            <div className="relative w-full overflow-hidden bg-wood-dark" style={{ aspectRatio: "16/9", maxHeight: "42vh" }}>
               {site.venue.image ? (
                 <Image
                   src={site.venue.image}
                   alt={site.venue.imageAlt}
                   fill
                   sizes="(min-width: 768px) 672px, 94vw"
-                  className="object-cover"
+                  className="object-cover object-center"
                   placeholder="blur"
                   blurDataURL={VENUE_BLUR}
                 />
