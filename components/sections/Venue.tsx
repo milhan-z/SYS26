@@ -1,15 +1,21 @@
+import Image from "next/image";
 import { site } from "@/data/site";
 import { SkyBackdrop } from "@/components/scene/SkyBackdrop";
+import { VenueArt } from "@/components/scene/VenueArt";
 import { TitleBanner } from "@/components/ui/TitleBanner";
 import { PixelPanel } from "@/components/ui/PixelPanel";
 import { PixelButton } from "@/components/ui/PixelButton";
 import { Reveal } from "@/components/ui/Reveal";
 import { BuildingIcon, MapIcon, PinIcon } from "@/components/icons";
 
+/** Tiny base64 preview so the venue photo fades in instead of popping. */
+const VENUE_BLUR =
+  "data:image/jpeg;base64,/9j/2wBDABsSFBcUERsXFhceHBsgKEIrKCUlKFE6PTBCYFVlZF9VXVtqeJmBanGQc1tdhbWGkJ6jq62rZ4C8ybqmx5moq6T/2wBDARweHigjKE4rK06kbl1upKSkpKSkpKSkpKSkpKSkpKSkpKSkpKSkpKSkpKSkpKSkpKSkpKSkpKSkpKSkpKSkpKT/wAARCAAJAAwDASIAAhEBAxEB/8QAFgABAQEAAAAAAAAAAAAAAAAAAgQF/8QAHxAAAgIBBAMAAAAAAAAAAAAAAQIAAzEEERIUIkFx/8QAFAEBAAAAAAAAAAAAAAAAAAAAA//EABURAQEAAAAAAAAAAAAAAAAAABEA/9oADAMBAAIRAxEAPwDO7hNvOpUqPsKMxHUXA+bLvJUyPgibMIJG/9k=";
+
 /**
- * Chapter 3 — the venue: a live embedded Google Map of the place, plus the
- * address and a "View Map" button. Swap the map via data/site.ts →
- * venue.mapEmbedUrl (Google Maps → Share → Embed a map → the src URL).
+ * Chapter 3 — the venue: a golden-hour photo of the building, a live embedded
+ * Google Map, the address, and a "View Map" button. Swap the photo via
+ * data/site.ts → venue.image and the map via venue.mapEmbedUrl.
  */
 export function Venue() {
   return (
@@ -32,19 +38,23 @@ export function Venue() {
           </div>
         </Reveal>
 
-        {/* live, embedded map of the venue */}
+        {/* venue photo */}
         <Reveal>
           <PixelPanel as="figure" innerClassName="p-1.5">
-            <div className="relative aspect-[16/10] overflow-hidden bg-wood-dark">
-              <iframe
-                src={site.venue.mapEmbedUrl}
-                title={`Map to ${site.venue.name} — ${site.venue.mapLabel}`}
-                className="absolute inset-0 h-full w-full"
-                style={{ border: 0 }}
-                loading="lazy"
-                allowFullScreen
-                referrerPolicy="no-referrer-when-downgrade"
-              />
+            <div className="relative w-full overflow-hidden bg-wood-dark" style={{ height: "clamp(160px, 38vh, 320px)" }}>
+              {site.venue.image ? (
+                <Image
+                  src={site.venue.image}
+                  alt={site.venue.imageAlt}
+                  fill
+                  sizes="(min-width: 768px) 672px, 94vw"
+                  className="object-cover"
+                  placeholder="blur"
+                  blurDataURL={VENUE_BLUR}
+                />
+              ) : (
+                <VenueArt />
+              )}
             </div>
           </PixelPanel>
         </Reveal>
