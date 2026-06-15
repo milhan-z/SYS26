@@ -48,6 +48,15 @@ export default function RootLayout({
       className={`${pixelify.variable} ${pressStart.variable} ${nunito.variable}`}
     >
       <head>
+        {/* Preload critical images so they're ready before the user scrolls */}
+        {site.venue.image && (
+          <link rel="preload" as="image" href={site.venue.image} />
+        )}
+        {site.memories.albums.map((album, i) =>
+          album.cover ? (
+            <link key={i} rel="preload" as="image" href={album.cover} />
+          ) : null,
+        )}
         {/*
           Opt into the gated "intro" experience before first paint, so the page
           opens on the title screen with no flash of the hero behind it. If this

@@ -1,4 +1,5 @@
 import { IntroGate } from "@/components/IntroGate";
+import { ImagePreloader } from "@/components/ImagePreloader";
 import { BgmPlayer } from "@/components/BgmPlayer";
 import { Hud } from "@/components/Hud";
 import { PageNav } from "@/components/PageNav";
@@ -12,6 +13,7 @@ export default function InvitationPage() {
   return (
     <>
       <IntroGate />
+      <ImagePreloader />
       <BgmPlayer />
       <Hud />
       <main id="main" tabIndex={-1} className="outline-none">
