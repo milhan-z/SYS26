@@ -296,15 +296,15 @@ export const site: SiteConfig = {
 
   audio: {
     enabled: true,
-    // Pre-trimmed clip (~39s, ~0.9MB) so it loads fast and starts instantly.
-    // It covers 00:44–01:23 of the original song; the loop points below are
-    // offsets *within this clip* (3s = the song's 00:47, 36s = 01:20). The few
+    // Pre-trimmed clip (~36s, ~551KB) so it loads fast and starts instantly.
+    // It covers 00:46–01:22 of "Slipping Through My Fingers" by ABBA;
+    // the loop points below are offsets *within this clip*. The few
     // seconds of lead-in/tail keep the loop points interior, which is what
     // makes the repeat perfectly seamless. To re-trim from a full song, run:
-    //   node scripts/trim-mp3.mjs "<full.mp3>" "public/audio/good-life.mp3" 44 83
-    src: "/audio/good-life.mp3",
-    loopStart: 3, // 00:47 in the original
-    loopEnd: 36, // 01:20 in the original
+    //   node scripts/trim-mp3.mjs "<full.mp3>" "public/audio/slipping-through-my-fingers.mp3" 46 82
+    src: "/audio/slipping-through-my-fingers.mp3",
+    loopStart: 3,
+    loopEnd: 33,
     volume: 0.4,
     label: "background music",
   },
