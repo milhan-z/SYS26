@@ -6,6 +6,7 @@ import { createPortal } from "react-dom";
 import type { MemoryAlbum, GalleryPhoto } from "@/data/site";
 import { MemoryPlaceholder } from "@/components/scene/MemoryPlaceholder";
 import { Reveal } from "@/components/ui/Reveal";
+import { lockScroll, unlockScroll } from "@/lib/scrollLock";
 import {
   CameraIcon,
   ChevronLeftIcon,
@@ -179,10 +180,10 @@ export function Gallery({ albums }: { albums: MemoryAlbum[] }) {
       }
     };
     document.addEventListener("keydown", onKey);
-    document.body.style.overflow = "hidden";
+    lockScroll();
     return () => {
       document.removeEventListener("keydown", onKey);
-      document.body.style.overflow = "";
+      unlockScroll();
     };
   }, [albumIndex, photoIndex, closeAlbum, closePhoto, stepPhoto]);
 

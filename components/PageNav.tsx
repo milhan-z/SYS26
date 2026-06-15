@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 import { SECTIONS } from "@/data/site";
+import { goToSection } from "@/lib/slideNav";
 import {
   ArrowDownIcon,
   ChevronLeftIcon,
@@ -43,9 +44,7 @@ export function PageNav() {
   const goTo = useCallback(
     (index: number) => {
       const clamped = Math.max(0, Math.min(total - 1, index));
-      document
-        .getElementById(SECTIONS[clamped].id)
-        ?.scrollIntoView({ behavior: "smooth", block: "start" });
+      goToSection(SECTIONS[clamped].id);
     },
     [total],
   );

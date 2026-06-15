@@ -3,6 +3,8 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { SECTIONS, site } from "@/data/site";
 import { CloseIcon, Emblem, HeartIcon, MenuIcon } from "@/components/icons";
+import { goToSection } from "@/lib/slideNav";
+import { lockScroll, unlockScroll } from "@/lib/scrollLock";
 
 /**
  * Fixed game-HUD header: framed emblem + title on the left, a "quest log"
@@ -18,18 +20,28 @@ export function Hud() {
     if (restoreFocus) menuButtonRef.current?.focus();
   }, []);
 
-  // menu: Escape to close, lock body scroll, focus first item
+  // jump to a chapter: close the menu first, then scroll once it's torn down
+  // (rAF lets the scroll lock release before we move)
+  const jumpTo = useCallback(
+    (id: string) => {
+      closeMenu(false);
+      requestAnimationFrame(() => goToSection(id));
+    },
+    [closeMenu],
+  );
+
+  // menu: Escape to close, lock page scroll, focus first item
   useEffect(() => {
     if (!menuOpen) return;
     const onKey = (event: KeyboardEvent) => {
       if (event.key === "Escape") closeMenu();
     };
     document.addEventListener("keydown", onKey);
-    document.body.style.overflow = "hidden";
+    lockScroll();
     firstLinkRef.current?.focus();
     return () => {
       document.removeEventListener("keydown", onKey);
-      document.body.style.overflow = "";
+      unlockScroll();
     };
   }, [menuOpen, closeMenu]);
 
@@ -40,6 +52,10 @@ export function Hud() {
           <div className="pix panel-wood flex items-center justify-between gap-3 px-2.5 py-1.5 sm:px-3">
             <a
               href="#invitation"
+              onClick={(event) => {
+                event.preventDefault();
+                jumpTo("invitation");
+              }}
               className="flex min-h-11 items-center gap-2.5"
               aria-label={`${site.brand.name} — back to top`}
             >
@@ -101,7 +117,10 @@ export function Hud() {
                       <a
                         ref={index === 0 ? firstLinkRef : undefined}
                         href={`#${section.id}`}
-                        onClick={() => closeMenu(false)}
+                        onClick={(event) => {
+                          event.preventDefault();
+                          jumpTo(section.id);
+                        }}
                         className="pix-sm group flex min-h-12 items-center gap-3 bg-wood-dark px-4 py-2.5 transition-colors hover:bg-wood-light"
                       >
                         <span className="font-arcade text-[0.6rem] text-gold/80">
