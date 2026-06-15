@@ -25,3 +25,8 @@ yarn-error.log*
 
 # typescript
 *.tsbuildinfo
+
+# raw photo originals (huge camera files) — only the optimized gallery is shipped.
+# Re-run the optimizer with: node scripts/optimize-photos.mjs
+/public/images/Foto
+/public/images/gallery/_albums.generated.txt

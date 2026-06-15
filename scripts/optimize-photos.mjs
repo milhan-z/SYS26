@@ -1,0 +1,104 @@
+/**
+ * Optimize the raw event photos in public/images/Foto/<album>/ into small,
+ * web-ready JPEGs under public/images/gallery/<slug>/NN.jpg.
+ *
+ * The originals are 4–9 MB camera files (far too big to ship) and include
+ * formats browsers can't show (.ARW Sony RAW, .heic). This resizes to a sane
+ * web size, fixes EXIF rotation (phone photos!), strips metadata, and converts
+ * everything to JPEG. RAW files that sharp can't decode are skipped.
+ *
+ * Run:  node scripts/optimize-photos.mjs
+ */
+import { promises as fs } from "node:fs";
+import path from "node:path";
+import sharp from "sharp";
+
+const ROOT = path.resolve("public/images/Foto");
+const OUT = path.resolve("public/images/gallery");
+
+const MAX_EDGE = 1400; // long-edge px — covers the lightbox at 2x DPR
+const QUALITY = 80;
+
+// folder → output slug + display title (order = order on the memory wall)
+const ALBUMS = [
+  { dir: "o week", slug: "o-week", title: "O-Week" },
+  { dir: "globalnight", slug: "global-night", title: "Global Night" },
+  { dir: "guf", slug: "guf", title: "GUF" },
+  { dir: "jcc", slug: "jcc", title: "JCC" },
+  { dir: "sports day", slug: "sports-day", title: "Sports Day" },
+  { dir: "bromo", slug: "bromo", title: "Bromo Trip" },
+];
+
+const DECODABLE = /\.(jpe?g|png|webp|heic|heif|tiff?)$/i;
+
+async function run() {
+  const manifest = [];
+
+  for (const album of ALBUMS) {
+    const srcDir = path.join(ROOT, album.dir);
+    const outDir = path.join(OUT, album.slug);
+    await fs.mkdir(outDir, { recursive: true });
+
+    let entries;
+    try {
+      entries = (await fs.readdir(srcDir)).filter((f) => DECODABLE.test(f)).sort();
+    } catch {
+      console.warn(`! skipped missing folder: ${album.dir}`);
+      continue;
+    }
+
+    const photos = [];
+    let n = 0;
+    for (const file of entries) {
+      const src = path.join(srcDir, file);
+      n += 1;
+      const outName = String(n).padStart(2, "0") + ".jpg";
+      const outPath = path.join(outDir, outName);
+      try {
+        const info = await sharp(src)
+          .rotate() // apply EXIF orientation
+          .resize(MAX_EDGE, MAX_EDGE, { fit: "inside", withoutEnlargement: true })
+          .jpeg({ quality: QUALITY, mozjpeg: true })
+          .toFile(outPath);
+        photos.push(`/images/gallery/${album.slug}/${outName}`);
+        console.log(
+          `  ${album.slug}/${outName}  ${info.width}x${info.height}  ${(info.size / 1024).toFixed(0)} KB`,
+        );
+      } catch (err) {
+        n -= 1; // don't burn an index on a file we couldn't decode
+        console.warn(`  ! skipped ${album.dir}/${file}: ${err.message}`);
+      }
+    }
+
+    manifest.push({ ...album, photos });
+    console.log(`✓ ${album.title}: ${photos.length} photos\n`);
+  }
+
+  // emit a ready-to-paste albums array for data/site.ts
+  const out = manifest
+    .map((a) => {
+      const photoLines = a.photos
+        .map(
+          (src, i) =>
+            `        { src: "${src}", alt: "${a.title} — photo ${i + 1}" },`,
+        )
+        .join("\n");
+      return `      {
+        cover: "${a.photos[0] ?? null}",
+        title: "${a.title}",
+        alt: "${a.title}",
+        photos: [
+${photoLines}
+        ],
+      },`;
+    })
+    .join("\n");
+
+  await fs.writeFile(path.join(OUT, "_albums.generated.txt"), out, "utf8");
+  console.log("Wrote public/images/gallery/_albums.generated.txt");
+}
+
+run().catch((e) => {
+  console.error(e);
+  process.exit(1);
+});
