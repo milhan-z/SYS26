@@ -190,8 +190,13 @@ page when you have it.
 
 ### Hero artwork (page 1)
 
-The opening scene is hand-coded pixel art (no download needed). If you'd
-rather use the real ITS Global Kampong render, save it as
+The opening is a hand-coded **"Dusk Lanterns"** scene
+([`components/scene/DuskLanterns.tsx`](components/scene/DuskLanterns.tsx)): a
+deep twilight sky with an ember-glow horizon, a moon, a starfield, dreamy
+bokeh, and warm paper lanterns drifting upward, over a low kampong silhouette.
+The landing screen shares this exact backdrop, so tapping **Open Invitation**
+feels like stepping into the same world. The dark sky keeps the title crisp
+(no image download). If you'd rather use a real photo, save it as
 `public/images/hero.jpg` and set `hero.backgroundImage: "/images/hero.jpg"`.
 
 ### Colors & fonts

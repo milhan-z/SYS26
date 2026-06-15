@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { site } from "@/data/site";
-import { NightScene } from "@/components/scene/NightScene";
+import { DuskLanterns } from "@/components/scene/DuskLanterns";
 import { Emblem, ChevronRightIcon, HeartIcon } from "@/components/icons";
 
 type Phase = "loading" | "ready" | "leaving";
@@ -81,8 +81,8 @@ export function IntroGate() {
       aria-label={`Welcome — ${site.hero.title}`}
       onClick={enter}
     >
-      {/* opaque, self-contained backdrop */}
-      <NightScene />
+      {/* opaque, self-contained backdrop — the same world the hero opens into */}
+      <DuskLanterns />
       <div className="intro-scrim" aria-hidden="true" />
 
       <div className="intro-content">

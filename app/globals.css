@@ -152,6 +152,88 @@ svg {
 }
 
 /* ────────────────────────────────────────────────────────────────────────────
+   Hero — a cinematic golden-hour "title card"
+   A framing veil carves a calm, readable pocket for the title while the sunset
+   still glows around the edges; a warm aura makes the title pop; the bottom
+   melts into the wooden deck so the scene feels intentional, not cropped.
+   ──────────────────────────────────────────────────────────────────────── */
+.hero-veil {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  background:
+    /* gentle readability pocket behind the title (the sky is already dark) */
+    radial-gradient(
+      120% 62% at 50% 33%,
+      rgba(8, 5, 14, 0.42) 0%,
+      rgba(8, 5, 14, 0.18) 42%,
+      rgba(8, 5, 14, 0) 72%
+    ),
+    /* top frame, tucked under the HUD */
+    linear-gradient(180deg, rgba(8, 5, 14, 0.65) 0%, rgba(8, 5, 14, 0) 24%),
+    /* grounding into the deck at the bottom */
+    linear-gradient(
+      0deg,
+      var(--color-wood-deep) 0%,
+      rgba(27, 17, 10, 0.6) 10%,
+      rgba(27, 17, 10, 0) 34%
+    );
+}
+
+/* warm bloom that sits behind the title text */
+.hero-title-wrap {
+  position: relative;
+  isolation: isolate;
+}
+.hero-title-aura {
+  position: absolute;
+  left: 50%;
+  top: 52%;
+  z-index: -1;
+  width: 132%;
+  height: 230%;
+  transform: translate(-50%, -50%);
+  background: radial-gradient(
+    closest-side,
+    rgba(255, 186, 98, 0.42) 0%,
+    rgba(255, 150, 70, 0.16) 52%,
+    transparent 78%
+  );
+  filter: blur(7px);
+  pointer-events: none;
+  animation: heroAura 6s ease-in-out infinite;
+}
+@keyframes heroAura {
+  0%,
+  100% {
+    opacity: 0.6;
+    transform: translate(-50%, -50%) scale(0.96);
+  }
+  50% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1.04);
+  }
+}
+
+/* crisp-yet-warm title + high-contrast subtitle */
+.hero-title {
+  position: relative;
+  color: var(--color-cream);
+  text-shadow:
+    0 2px 0 rgba(18, 8, 3, 0.95),
+    0 5px 0 rgba(18, 8, 3, 0.5),
+    0 0 26px rgba(255, 178, 84, 0.5),
+    0 0 64px rgba(255, 138, 60, 0.32);
+}
+.hero-subtitle {
+  color: var(--color-glow);
+  text-shadow:
+    0 2px 0 rgba(18, 8, 3, 0.95),
+    0 0 18px rgba(0, 0, 0, 0.6);
+}
+
+/* ────────────────────────────────────────────────────────────────────────────
    Pixel chrome — notched corners, panels, buttons
    ──────────────────────────────────────────────────────────────────────── */
 
